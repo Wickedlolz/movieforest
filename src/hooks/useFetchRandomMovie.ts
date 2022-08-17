@@ -1,14 +1,13 @@
 import { useState, useEffect } from 'react';
 import { endpoints, getAllMovies } from '../services/api';
-import { Movie } from '../typings';
+import { MovieProps } from '../typings';
 
-const useFetchRandomMovie = (): Movie | null => {
-    const [movie, setMovie] = useState<Movie | null>(null);
+const useFetchRandomMovie = (): MovieProps | null => {
+    const [movie, setMovie] = useState<MovieProps | null>(null);
 
     useEffect(() => {
         getAllMovies(endpoints.UPCOMING)
             .then((result) => {
-                console.log(result);
                 setMovie(
                     result.results[
                         Math.floor(Math.random() * result.results.length)

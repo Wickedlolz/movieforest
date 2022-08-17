@@ -6,7 +6,7 @@ import {
     ReactNode,
 } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { auth } from '../firebase.config';
+import { auth, db } from '../firebase.config';
 import {
     createUserWithEmailAndPassword,
     signInWithEmailAndPassword,
@@ -14,6 +14,8 @@ import {
     onAuthStateChanged,
     User,
 } from 'firebase/auth';
+
+import { setDoc, doc } from 'firebase/firestore';
 
 interface IAuth {
     user: User | null;
@@ -50,6 +52,9 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
                 password
             );
             setUser(userCredentials.user);
+            setDoc(doc(db, 'users', email), {
+                savedShows: [],
+            });
             setLoading(false);
             navigate('/');
         } catch (error: any) {

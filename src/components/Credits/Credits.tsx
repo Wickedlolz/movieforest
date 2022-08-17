@@ -1,4 +1,6 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { request, endpoints } from '../../services/api';
 import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -7,14 +9,40 @@ import CardActionArea from '@mui/material/CardActionArea';
 import Grid from '@mui/material/Grid';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
-import { MovieProps } from '../../typings';
 import Spinner from '../common/Spinner';
 
-interface RowProps {
-    movies: MovieProps[];
+interface CreditsProps {
+    movieId: string | undefined;
 }
 
-function Row({ movies }: RowProps) {
+interface ActorsCredits {
+    adult: boolean;
+    gender: number | null;
+    id: number;
+    known_for_department: string;
+    name: string;
+    original_name: string;
+    popularity: number;
+    profile_path: string | null;
+    cast_id: number;
+    character: string;
+    credit_id: string;
+    order: number;
+}
+
+function Credits({ movieId }: CreditsProps) {
+    const [credits, setCredits] = useState<ActorsCredits[] | null>(null);
+
+    useEffect(() => {
+        request(endpoints.GET_MOVIE_CREDITS(movieId!))
+            .then((result) => {
+                setCredits(result.cast);
+            })
+            .catch((error: any) => {
+                console.log(error.message);
+            });
+    }, [movieId]);
+
     return (
         <Carousel
             additionalTransfrom={0}
@@ -64,22 +92,22 @@ function Row({ movies }: RowProps) {
             slidesToSlide={1}
             swipeable
         >
-            {!movies ? (
+            {!credits ? (
                 <Spinner />
             ) : (
-                movies.map((x) => (
+                credits.map((x) => (
                     <Grid container spacing={1} key={x.id}>
                         <Grid item xs={11}>
                             <Card
                                 sx={{ maxWidth: 345, textDecoration: 'none' }}
                                 component={Link}
-                                to={`/movie/${x.id}`}
+                                to={`/person/${x.id}`}
                             >
                                 <CardActionArea>
                                     <CardMedia
                                         component="img"
                                         height="140"
-                                        image={`https://image.tmdb.org/t/p/original/${x?.backdrop_path}`}
+                                        image={`https://image.tmdb.org/t/p/original/${x?.profile_path}`}
                                         alt="green iguana"
                                     />
                                     <CardContent>
@@ -88,7 +116,7 @@ function Row({ movies }: RowProps) {
                                             variant="subtitle1"
                                             component="div"
                                         >
-                                            {x.title}
+                                            {x?.name}
                                         </Typography>
                                     </CardContent>
                                 </CardActionArea>
@@ -101,4 +129,4 @@ function Row({ movies }: RowProps) {
     );
 }
 
-export default Row;
+export default Credits;

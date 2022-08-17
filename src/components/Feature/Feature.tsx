@@ -2,11 +2,11 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import { Movie } from '../../typings';
+import { MovieProps } from '../../typings';
 import Button from '@mui/material/Button';
 
 interface MainFeaturedProps {
-    movie: Movie | null;
+    movie: MovieProps | null;
 }
 
 function Feature({ movie }: MainFeaturedProps) {
