@@ -5,7 +5,7 @@ const baseUrl: string = `https://api.themoviedb.org/3`;
 
 export const endpoints = {
     UPCOMING: `/movie/upcoming?api_key=${API_KEY}&language=en-US&page=1`,
-    TOP_RATED: `/movie/top_rated?api_key=${API_KEY}&language=en-US&page=2`,
+    TOP_RATED: `/movie/top_rated?api_key=${API_KEY}&language=en-US&page=1`,
     POPULAR: `/movie/popular?api_key=${API_KEY}&language=en-US&page=2`,
     NOW_PLAYING: `/movie/now_playing?api_key=${API_KEY}&language=en-US&page=1`,
     GET_DETAILS_BY_ID: (movieId: string) =>
@@ -20,7 +20,9 @@ export const endpoints = {
     GET_RECOMMENDATIONS_BY_ID: (movieId: string) =>
         `/movie/${movieId}/recommendations?api_key=${API_KEY}&language=en-US&page=1`,
     GET_MOVIE_CREDITS: (movieId: string) =>
-        `/movie/${585511}/credits?api_key=${API_KEY}&language=en-US`,
+        `/movie/${movieId}/credits?api_key=${API_KEY}&language=en-US`,
+    GET_MOVIE_REVIEWS_BY_ID: (movieId: string) =>
+        `/movie/${movieId}/reviews?api_key=${API_KEY}&language=en-US&page=1`,
 };
 
 export async function request(url: string): Promise<any> {
@@ -77,4 +79,8 @@ export async function getMovieDetailedInfo(movieId: string) {
         console.log(error.message);
         throw error;
     }
+}
+
+export async function getMovieReviewsById(movieId: string): Promise<any> {
+    return request(endpoints.GET_MOVIE_REVIEWS_BY_ID(movieId));
 }

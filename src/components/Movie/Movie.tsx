@@ -1,17 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getMovieDetailedInfo } from '../../services/api';
-import ReactPlayer from 'react-player';
+import { useUserAuth } from '../../contexts/AuthContext';
+import { getMovieDetailedInfo, getMovieReviewsById } from '../../services/api';
+import ReactPlayer from 'react-player/lazy';
+import { MovieInfoProps } from '../../typings';
 
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Spinner from '../common/Spinner';
-import { MovieInfoProps } from '../../typings';
 import Recommendations from '../Recommendations/Recommendations';
 import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
@@ -20,25 +19,39 @@ import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlin
 import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
 import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined';
 import Credits from '../Credits/Credits';
+import Review from '../Review/Review';
 
 function Movie() {
     const { movieId } = useParams();
+    const { user } = useUserAuth();
     const [movieInfo, setMovieInfo] = useState<MovieInfoProps | null>(null);
     const [movieVideos, setMovieVideos] = useState<any>({});
+    const [movieReviews, setMovieReviews] = useState<any>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        getMovieDetailedInfo(movieId!).then(([movieInfo, movieVideos]) => {
-            const index = movieVideos.results.findIndex(
-                (element: any) => element.type === 'Trailer'
-            );
-            setMovieInfo(movieInfo!);
-            setMovieVideos(movieVideos.results[index]);
-            setLoading(false);
-        });
+        setLoading(true);
+        getMovieDetailedInfo(movieId!)
+            .then(([movieInfo, movieVideos]) => {
+                const index = movieVideos.results.findIndex(
+                    (element: any) => element.type === 'Trailer'
+                );
+                setMovieInfo(movieInfo!);
+                setMovieVideos(movieVideos.results[index]);
+                setLoading(false);
+            })
+            .catch((error: any) => console.log(error.message));
     }, [movieId]);
 
-    console.log(movieInfo);
+    useEffect(() => {
+        getMovieReviewsById(movieId!)
+            .then((result) => {
+                setMovieReviews(result.results);
+            })
+            .catch((error: any) => console.log(error.message));
+    }, [movieId]);
+
+    console.log(movieReviews);
 
     if (loading) {
         return <Spinner />;
@@ -50,7 +63,7 @@ function Movie() {
                 component="img"
                 height="340"
                 image={`https://image.tmdb.org/t/p/original/${movieInfo?.backdrop_path}`}
-                alt="green iguana"
+                alt="movie poster"
             />
             <CardContent>
                 <Typography gutterBottom variant="h5" component="div">
@@ -70,20 +83,22 @@ function Movie() {
                             .join(', ')}
                     />
                 </Typography>
-                <Typography gutterBottom variant="h5" component="div">
-                    <IconButton aria-label="add to list">
-                        <FormatListBulletedOutlinedIcon />
-                    </IconButton>
-                    <IconButton aria-label="mark as favourite">
-                        <FavoriteBorderOutlinedIcon />
-                    </IconButton>
-                    <IconButton aria-label="add to your watchlist">
-                        <BookmarkBorderOutlinedIcon />
-                    </IconButton>
-                    <IconButton aria-label="rate it">
-                        <StarBorderOutlinedIcon />
-                    </IconButton>
-                </Typography>
+                {user && (
+                    <Typography gutterBottom variant="h5" component="div">
+                        <IconButton aria-label="add to list">
+                            <FormatListBulletedOutlinedIcon />
+                        </IconButton>
+                        <IconButton aria-label="mark as favourite">
+                            <FavoriteBorderOutlinedIcon />
+                        </IconButton>
+                        <IconButton aria-label="add to your watchlist">
+                            <BookmarkBorderOutlinedIcon />
+                        </IconButton>
+                        <IconButton aria-label="rate it">
+                            <StarBorderOutlinedIcon />
+                        </IconButton>
+                    </Typography>
+                )}
                 <Typography gutterBottom variant="h6" component="h6">
                     Overview
                 </Typography>
@@ -108,7 +123,20 @@ function Movie() {
                 </Typography>
                 <Credits movieId={movieId} />
                 <Divider />
-                <Typography variant="h6" color="text.secondary">
+                <Typography variant="h6" component="h6">
+                    Reviews
+                </Typography>
+                {movieReviews.length > 0 ? (
+                    movieReviews.map((review: any) => (
+                        <Review review={review} />
+                    ))
+                ) : (
+                    <Typography variant="body2">
+                        We don't have any reviews for {movieInfo?.title}.
+                    </Typography>
+                )}
+                <Divider />
+                <Typography variant="h6" color="h6">
                     Recommendations
                 </Typography>
                 <Recommendations
@@ -116,9 +144,6 @@ function Movie() {
                     movieTitle={movieInfo?.title}
                 />
             </CardContent>
-            <CardActions>
-                <Button size="small">Share</Button>
-            </CardActions>
         </Card>
     );
 }

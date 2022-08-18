@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
@@ -63,8 +64,13 @@ function Feature({ movie }: MainFeaturedProps) {
                         <Typography variant="h5" color="inherit" paragraph>
                             {movie?.overview}
                         </Typography>
-                        <Button variant="contained" sx={{ mt: 3, mb: 2 }}>
-                            Read more
+                        <Button
+                            component={Link}
+                            to={`/movie/${movie?.id}`}
+                            variant="contained"
+                            sx={{ mt: 3, mb: 2 }}
+                        >
+                            More info
                         </Button>
                     </Box>
                 </Grid>

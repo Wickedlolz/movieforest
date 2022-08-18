@@ -13,14 +13,21 @@ import {
     signOut,
     onAuthStateChanged,
     User,
+    UserCredential,
 } from 'firebase/auth';
 
 import { setDoc, doc } from 'firebase/firestore';
 
 interface IAuth {
     user: User | null;
-    signUp: (email: string, password: string) => Promise<void>;
-    signIn: (email: string, password: string) => Promise<void>;
+    signUp: (
+        email: string,
+        password: string
+    ) => Promise<void> | Promise<UserCredential>;
+    signIn: (
+        email: string,
+        password: string
+    ) => Promise<void> | Promise<UserCredential>;
     logout: () => Promise<void>;
     loading: boolean;
 }
