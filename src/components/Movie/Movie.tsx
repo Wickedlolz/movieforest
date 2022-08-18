@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom';
 import { useUserAuth } from '../../contexts/AuthContext';
 import { getMovieDetailedInfo, getMovieReviewsById } from '../../services/api';
 import ReactPlayer from 'react-player/lazy';
+import { db } from '../../firebase.config';
+import { doc, updateDoc, arrayUnion, onSnapshot } from 'firebase/firestore';
 import { MovieInfoProps } from '../../typings';
 
 import Card from '@mui/material/Card';
@@ -19,6 +21,7 @@ import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlin
 import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
 import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined';
 import Credits from '../Credits/Credits';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import Review from '../Review/Review';
 
 function Movie() {
@@ -28,6 +31,7 @@ function Movie() {
     const [movieVideos, setMovieVideos] = useState<any>({});
     const [movieReviews, setMovieReviews] = useState<any>([]);
     const [loading, setLoading] = useState(true);
+    const [isLiked, setIsLiked] = useState(false);
 
     useEffect(() => {
         setLoading(true);
@@ -51,7 +55,30 @@ function Movie() {
             .catch((error: any) => console.log(error.message));
     }, [movieId]);
 
-    console.log(movieReviews);
+    useEffect(() => {
+        onSnapshot(doc(db, 'users', `${user?.email}`), (doc) => {
+            const liked = doc
+                .data()
+                ?.savedShows.find((x: any) => x.id === movieInfo?.id);
+
+            if (liked) {
+                setIsLiked(true);
+            } else {
+                setIsLiked(false);
+            }
+        });
+    }, [user, movieInfo]);
+
+    const handleLike = async () => {
+        try {
+            const userRef = doc(db, 'users', `${user?.email}`);
+            await updateDoc(userRef, {
+                savedShows: arrayUnion(movieInfo),
+            });
+        } catch (error: any) {
+            console.log(error.message);
+        }
+    };
 
     if (loading) {
         return <Spinner />;
@@ -88,9 +115,18 @@ function Movie() {
                         <IconButton aria-label="add to list">
                             <FormatListBulletedOutlinedIcon />
                         </IconButton>
-                        <IconButton aria-label="mark as favourite">
-                            <FavoriteBorderOutlinedIcon />
-                        </IconButton>
+                        {isLiked ? (
+                            <IconButton aria-label="unmark as favourite">
+                                <FavoriteIcon />
+                            </IconButton>
+                        ) : (
+                            <IconButton
+                                aria-label="mark as favourite"
+                                onClick={handleLike}
+                            >
+                                <FavoriteBorderOutlinedIcon />
+                            </IconButton>
+                        )}
                         <IconButton aria-label="add to your watchlist">
                             <BookmarkBorderOutlinedIcon />
                         </IconButton>
@@ -128,7 +164,7 @@ function Movie() {
                 </Typography>
                 {movieReviews.length > 0 ? (
                     movieReviews.map((review: any) => (
-                        <Review review={review} />
+                        <Review key={review.id} review={review} />
                     ))
                 ) : (
                     <Typography variant="body2">

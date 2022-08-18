@@ -12,12 +12,19 @@ import SignUp from './components/SignUp/SignUp';
 import Movie from './components/Movie/Movie';
 
 function App() {
-    const theme = createTheme();
+    const darkTheme = createTheme({
+        palette: {
+            mode: 'dark',
+            primary: {
+                main: '#1976d2',
+            },
+        },
+    });
 
     return (
         <RecoilRoot>
             <AuthContextProvider>
-                <ThemeProvider theme={theme}>
+                <ThemeProvider theme={darkTheme}>
                     <CssBaseline />
                     <Container maxWidth="lg">
                         <Header />
