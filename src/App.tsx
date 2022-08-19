@@ -10,6 +10,8 @@ import Header from './components/Header/Header';
 import SignIn from './components/SignIn/SignIn';
 import SignUp from './components/SignUp/SignUp';
 import Movie from './components/Movie/Movie';
+import People from './components/People/People';
+import Person from './components/Person/Person';
 
 function App() {
     const darkTheme = createTheme({
@@ -33,6 +35,11 @@ function App() {
                             <Route path="/signin" element={<SignIn />} />
                             <Route path="/signup" element={<SignUp />} />
                             <Route path="/movie/:movieId" element={<Movie />} />
+                            <Route path="/people" element={<People />} />
+                            <Route
+                                path="/people/person/:id"
+                                element={<Person />}
+                            />
                         </Routes>
                     </Container>
                 </ThemeProvider>

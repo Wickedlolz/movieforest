@@ -57,7 +57,7 @@ function Movie() {
 
     useEffect(() => {
         onSnapshot(doc(db, 'users', `${user?.email}`), (doc) => {
-            const liked = doc
+            const liked: boolean = doc
                 .data()
                 ?.savedShows.find((x: any) => x.id === movieInfo?.id);
 

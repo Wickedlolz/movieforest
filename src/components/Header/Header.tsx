@@ -52,6 +52,13 @@ function Header() {
                             <Button component={Link} to="/" color="inherit">
                                 Home
                             </Button>
+                            <Button
+                                component={Link}
+                                to="/people"
+                                color="inherit"
+                            >
+                                People
+                            </Button>
                             <div>
                                 <IconButton
                                     size="large"

@@ -101,7 +101,7 @@ function Credits({ movieId }: CreditsProps) {
                             <Card
                                 sx={{ maxWidth: 345, textDecoration: 'none' }}
                                 component={Link}
-                                to={`/person/${x.id}`}
+                                to={`/people/person/${x.id}`}
                             >
                                 <CardActionArea>
                                     <CardMedia
