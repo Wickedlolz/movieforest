@@ -1,4 +1,8 @@
-import { MovieProps } from '../typings';
+import {
+    MovieProps,
+    PersonStateProps,
+    PersonCastsStateProps,
+} from '../typings';
 
 const API_KEY: string = '356b2832036b27a06f949b42c2d89747';
 const baseUrl: string = `https://api.themoviedb.org/3`;
@@ -83,4 +87,24 @@ export async function getMovieDetailedInfo(movieId: string) {
 
 export async function getMovieReviewsById(movieId: string): Promise<any> {
     return request(endpoints.GET_MOVIE_REVIEWS_BY_ID(movieId));
+}
+
+export async function getPersonById(
+    personId: string
+): Promise<PersonStateProps> {
+    return request(endpoints.GET_PERSON_BY_ID(personId));
+}
+
+export async function getPersonMovieCredits(
+    personId: string
+): Promise<PersonCastsStateProps[]> {
+    try {
+        const result = await request(
+            endpoints.GET_PERSON_MOVIE_CREDITS_BY_ID(personId)
+        );
+        return result.cast;
+    } catch (error: any) {
+        console.log(error);
+        throw error;
+    }
 }

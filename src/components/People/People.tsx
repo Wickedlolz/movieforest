@@ -33,7 +33,7 @@ function People() {
 
     return (
         <>
-            <Typography variant="h6" component="h6">
+            <Typography variant="h4" component="h4">
                 Popular People
             </Typography>
             <Grid container spacing={2}>
