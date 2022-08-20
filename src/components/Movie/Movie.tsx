@@ -34,6 +34,7 @@ function Movie() {
     const [movieInfo, setMovieInfo] = useState<MovieInfoProps | null>(null);
     const [movieVideos, setMovieVideos] = useState<any>({});
     const [movieReviews, setMovieReviews] = useState<any>([]);
+    const [savedMovies, setSavedMovies] = useState<any>([]);
     const [loading, setLoading] = useState(true);
     const [isLiked, setIsLiked] = useState(false);
     const [notify, setNotify] = useRecoilState(notificationAtom);
@@ -49,22 +50,35 @@ function Movie() {
                 setMovieVideos(movieVideos.results[index]);
                 setLoading(false);
             })
-            .catch((error: any) => console.log(error.message));
-    }, [movieId]);
+            .catch((error: any) =>
+                setNotify((state) => ({
+                    ...state,
+                    show: true,
+                    msg: error.message,
+                }))
+            );
+    }, [movieId, setNotify]);
 
     useEffect(() => {
         getMovieReviewsById(movieId!)
             .then((result) => {
                 setMovieReviews(result.results);
             })
-            .catch((error: any) => console.log(error.message));
-    }, [movieId]);
+            .catch((error: any) =>
+                setNotify((state) => ({
+                    ...state,
+                    show: true,
+                    msg: error.message,
+                }))
+            );
+    }, [movieId, setNotify]);
 
     useEffect(() => {
         onSnapshot(doc(db, 'users', `${user?.email}`), (doc) => {
             const liked: boolean = doc
                 .data()
                 ?.savedShows.find((x: any) => x.id === movieInfo?.id);
+            setSavedMovies(doc.data()?.savedShows);
 
             if (liked) {
                 setIsLiked(true);
@@ -80,14 +94,24 @@ function Movie() {
             await updateDoc(userRef, {
                 savedShows: arrayUnion(movieInfo),
             });
+        } catch (error: any) {
             setNotify((state) => ({
                 ...state,
                 show: true,
-                msg: 'Liked successfully.',
+                msg: error.message,
             }));
-        } catch (error: any) {
-            console.log(error.message);
         }
+    };
+
+    const handleDislike = async () => {
+        const userRef = doc(db, 'users', `${user?.email}`);
+        const result = savedMovies.filter(
+            (x: any) => x.id.toString() !== movieId
+        );
+
+        await updateDoc(userRef, {
+            savedShows: result,
+        });
     };
 
     const handleClose = (
@@ -143,7 +167,10 @@ function Movie() {
                                 <FormatListBulletedOutlinedIcon />
                             </IconButton>
                             {isLiked ? (
-                                <IconButton aria-label="unmark as favourite">
+                                <IconButton
+                                    aria-label="unmark as favourite"
+                                    onClick={handleDislike}
+                                >
                                     <FavoriteIcon />
                                 </IconButton>
                             ) : (
