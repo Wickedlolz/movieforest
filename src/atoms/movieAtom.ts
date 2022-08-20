@@ -1,8 +1,19 @@
 import { atom } from 'recoil';
-import { DocumentData } from 'firebase/firestore';
-import { MovieProps } from '../typings';
+import { MovieInfoProps } from '../typings';
 
-export const movieState = atom<MovieProps | DocumentData | null>({
+interface MovieStateProps {
+    movieInfo: MovieInfoProps | null;
+    movieVideos: any | null;
+    movieReviews: [] | null;
+}
+
+const initialState = {
+    movieInfo: null,
+    movieVideos: null,
+    movieReviews: null,
+};
+
+export const movieState = atom<MovieStateProps>({
     key: 'movieState',
-    default: null,
+    default: initialState,
 });

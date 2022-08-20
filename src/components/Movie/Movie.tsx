@@ -7,6 +7,7 @@ import { db } from '../../firebase.config';
 import { doc, updateDoc, arrayUnion, onSnapshot } from 'firebase/firestore';
 import { MovieInfoProps } from '../../typings';
 import { useRecoilState } from 'recoil';
+import { movieState } from '../../atoms/movieAtom';
 import { notificationAtom } from '../../atoms/notificationAtom';
 
 import Card from '@mui/material/Card';
@@ -31,23 +32,26 @@ import Alert from '@mui/material/Alert';
 function Movie() {
     const { movieId } = useParams();
     const { user } = useUserAuth();
-    const [movieInfo, setMovieInfo] = useState<MovieInfoProps | null>(null);
-    const [movieVideos, setMovieVideos] = useState<any>({});
-    const [movieReviews, setMovieReviews] = useState<any>([]);
-    const [savedMovies, setSavedMovies] = useState<any>([]);
+    const [movie, setMovie] = useRecoilState(movieState);
+    const [savedMovies, setSavedMovies] = useState<MovieInfoProps[]>([]);
     const [loading, setLoading] = useState(true);
     const [isLiked, setIsLiked] = useState(false);
     const [notify, setNotify] = useRecoilState(notificationAtom);
 
     useEffect(() => {
+        if (movie.movieInfo?.id === movieId) return;
         setLoading(true);
+
         getMovieDetailedInfo(movieId!)
             .then(([movieInfo, movieVideos]) => {
                 const index = movieVideos.results.findIndex(
                     (element: any) => element.type === 'Trailer'
                 );
-                setMovieInfo(movieInfo!);
-                setMovieVideos(movieVideos.results[index]);
+                setMovie((state) => ({
+                    ...state,
+                    movieInfo,
+                    movieVideos: movieVideos.results[index],
+                }));
                 setLoading(false);
             })
             .catch((error: any) =>
@@ -57,12 +61,16 @@ function Movie() {
                     msg: error.message,
                 }))
             );
-    }, [movieId, setNotify]);
+    }, [movieId, setNotify, setMovie, movie.movieInfo?.id]);
 
     useEffect(() => {
+        if (movie.movieInfo?.id === movieId) return;
         getMovieReviewsById(movieId!)
             .then((result) => {
-                setMovieReviews(result.results);
+                setMovie((state) => ({
+                    ...state,
+                    movieReviews: result.results,
+                }));
             })
             .catch((error: any) =>
                 setNotify((state) => ({
@@ -71,13 +79,13 @@ function Movie() {
                     msg: error.message,
                 }))
             );
-    }, [movieId, setNotify]);
+    }, [movieId, setNotify, setMovie, movie.movieInfo?.id]);
 
     useEffect(() => {
         onSnapshot(doc(db, 'users', `${user?.email}`), (doc) => {
             const liked: boolean = doc
                 .data()
-                ?.savedShows.find((x: any) => x.id === movieInfo?.id);
+                ?.savedShows.find((x: any) => x.id === movie.movieInfo?.id);
             setSavedMovies(doc.data()?.savedShows);
 
             if (liked) {
@@ -86,13 +94,13 @@ function Movie() {
                 setIsLiked(false);
             }
         });
-    }, [user, movieInfo]);
+    }, [user, movie]);
 
     const handleLike = async () => {
         try {
             const userRef = doc(db, 'users', `${user?.email}`);
             await updateDoc(userRef, {
-                savedShows: arrayUnion(movieInfo),
+                savedShows: arrayUnion(movie.movieInfo),
             });
         } catch (error: any) {
             setNotify((state) => ({
@@ -135,28 +143,30 @@ function Movie() {
                 <CardMedia
                     component="img"
                     height="340"
-                    image={`https://image.tmdb.org/t/p/original/${movieInfo?.backdrop_path}`}
+                    image={`https://image.tmdb.org/t/p/original/${movie.movieInfo?.backdrop_path}`}
                     alt="movie poster"
                 />
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="div">
-                        {movieInfo?.title}
+                        {movie.movieInfo?.title}
                     </Typography>
                     <Typography gutterBottom variant="h5" component="div">
                         <Chip
-                            label={`${movieInfo!.vote_average * 10}% Match`}
+                            label={`${
+                                movie.movieInfo!.vote_average * 10
+                            }% Match`}
                         />{' '}
                         <Chip label="HD" />{' '}
                         <Chip
-                            label={movieInfo?.original_language.toLocaleUpperCase()}
+                            label={movie.movieInfo?.original_language.toLocaleUpperCase()}
                         />{' '}
                         <Chip
                             variant="outlined"
-                            label={movieInfo?.release_date}
+                            label={movie.movieInfo?.release_date}
                         />{' '}
                         <Chip
                             variant="outlined"
-                            label={movieInfo?.genres
+                            label={movie.movieInfo?.genres
                                 .map((x: any) => x.name)
                                 .join(', ')}
                         />
@@ -193,14 +203,14 @@ function Movie() {
                         Overview
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                        {movieInfo?.overview}
+                        {movie.movieInfo?.overview}
                     </Typography>
                     <Divider />
                     <Typography variant="h6" component="h6">
                         Media
                     </Typography>
                     <ReactPlayer
-                        url={`https://www.youtube.com/watch?v=${movieVideos?.key}`}
+                        url={`https://www.youtube.com/watch?v=${movie?.movieVideos.key}`}
                         playing
                         width="100%"
                         controls
@@ -216,13 +226,14 @@ function Movie() {
                     <Typography variant="h6" component="h6">
                         Reviews
                     </Typography>
-                    {movieReviews.length > 0 ? (
-                        movieReviews.map((review: any) => (
+                    {movie.movieReviews!.length > 0 ? (
+                        movie.movieReviews!.map((review: any) => (
                             <Review key={review.id} review={review} />
                         ))
                     ) : (
                         <Typography variant="body2">
-                            We don't have any reviews for {movieInfo?.title}.
+                            We don't have any reviews for{' '}
+                            {movie.movieInfo?.title}.
                         </Typography>
                     )}
                     <Divider />
@@ -231,7 +242,7 @@ function Movie() {
                     </Typography>
                     <Recommendations
                         movieId={movieId}
-                        movieTitle={movieInfo?.title}
+                        movieTitle={movie.movieInfo?.title}
                     />
                 </CardContent>
             </Card>
