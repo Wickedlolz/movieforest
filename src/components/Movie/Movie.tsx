@@ -6,6 +6,8 @@ import ReactPlayer from 'react-player/lazy';
 import { db } from '../../firebase.config';
 import { doc, updateDoc, arrayUnion, onSnapshot } from 'firebase/firestore';
 import { MovieInfoProps } from '../../typings';
+import { useRecoilState } from 'recoil';
+import { notificationAtom } from '../../atoms/notificationAtom';
 
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -23,6 +25,8 @@ import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined';
 import Credits from '../Credits/Credits';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import Review from '../Review/Review';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 function Movie() {
     const { movieId } = useParams();
@@ -32,6 +36,7 @@ function Movie() {
     const [movieReviews, setMovieReviews] = useState<any>([]);
     const [loading, setLoading] = useState(true);
     const [isLiked, setIsLiked] = useState(false);
+    const [notify, setNotify] = useRecoilState(notificationAtom);
 
     useEffect(() => {
         setLoading(true);
@@ -75,9 +80,25 @@ function Movie() {
             await updateDoc(userRef, {
                 savedShows: arrayUnion(movieInfo),
             });
+            setNotify((state) => ({
+                ...state,
+                show: true,
+                msg: 'Liked successfully.',
+            }));
         } catch (error: any) {
             console.log(error.message);
         }
+    };
+
+    const handleClose = (
+        event?: React.SyntheticEvent | Event,
+        reason?: string
+    ) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setNotify((state) => ({ ...state, show: false, msg: '' }));
     };
 
     if (loading) {
@@ -85,102 +106,122 @@ function Movie() {
     }
 
     return (
-        <Card>
-            <CardMedia
-                component="img"
-                height="340"
-                image={`https://image.tmdb.org/t/p/original/${movieInfo?.backdrop_path}`}
-                alt="movie poster"
-            />
-            <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
-                    {movieInfo?.title}
-                </Typography>
-                <Typography gutterBottom variant="h5" component="div">
-                    <Chip label={`${movieInfo!.vote_average * 10}% Match`} />{' '}
-                    <Chip label="HD" />{' '}
-                    <Chip
-                        label={movieInfo?.original_language.toLocaleUpperCase()}
-                    />{' '}
-                    <Chip variant="outlined" label={movieInfo?.release_date} />{' '}
-                    <Chip
-                        variant="outlined"
-                        label={movieInfo?.genres
-                            .map((x: any) => x.name)
-                            .join(', ')}
-                    />
-                </Typography>
-                {user && (
+        <>
+            <Card>
+                <CardMedia
+                    component="img"
+                    height="340"
+                    image={`https://image.tmdb.org/t/p/original/${movieInfo?.backdrop_path}`}
+                    alt="movie poster"
+                />
+                <CardContent>
                     <Typography gutterBottom variant="h5" component="div">
-                        <IconButton aria-label="add to list">
-                            <FormatListBulletedOutlinedIcon />
-                        </IconButton>
-                        {isLiked ? (
-                            <IconButton aria-label="unmark as favourite">
-                                <FavoriteIcon />
-                            </IconButton>
-                        ) : (
-                            <IconButton
-                                aria-label="mark as favourite"
-                                onClick={handleLike}
-                            >
-                                <FavoriteBorderOutlinedIcon />
-                            </IconButton>
-                        )}
-                        <IconButton aria-label="add to your watchlist">
-                            <BookmarkBorderOutlinedIcon />
-                        </IconButton>
-                        <IconButton aria-label="rate it">
-                            <StarBorderOutlinedIcon />
-                        </IconButton>
+                        {movieInfo?.title}
                     </Typography>
-                )}
-                <Typography gutterBottom variant="h6" component="h6">
-                    Overview
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                    {movieInfo?.overview}
-                </Typography>
-                <Divider />
-                <Typography variant="h6" component="h6">
-                    Media
-                </Typography>
-                <ReactPlayer
-                    url={`https://www.youtube.com/watch?v=${movieVideos?.key}`}
-                    playing
-                    width="100%"
-                    controls
-                    style={{ padding: '2px' }}
-                    muted={true}
-                />
-                <Divider />
-                <Typography variant="h6" component="h6">
-                    Top Billed Cast
-                </Typography>
-                <Credits movieId={movieId} />
-                <Divider />
-                <Typography variant="h6" component="h6">
-                    Reviews
-                </Typography>
-                {movieReviews.length > 0 ? (
-                    movieReviews.map((review: any) => (
-                        <Review key={review.id} review={review} />
-                    ))
-                ) : (
-                    <Typography variant="body2">
-                        We don't have any reviews for {movieInfo?.title}.
+                    <Typography gutterBottom variant="h5" component="div">
+                        <Chip
+                            label={`${movieInfo!.vote_average * 10}% Match`}
+                        />{' '}
+                        <Chip label="HD" />{' '}
+                        <Chip
+                            label={movieInfo?.original_language.toLocaleUpperCase()}
+                        />{' '}
+                        <Chip
+                            variant="outlined"
+                            label={movieInfo?.release_date}
+                        />{' '}
+                        <Chip
+                            variant="outlined"
+                            label={movieInfo?.genres
+                                .map((x: any) => x.name)
+                                .join(', ')}
+                        />
                     </Typography>
-                )}
-                <Divider />
-                <Typography variant="h6" color="h6">
-                    Recommendations
-                </Typography>
-                <Recommendations
-                    movieId={movieId}
-                    movieTitle={movieInfo?.title}
-                />
-            </CardContent>
-        </Card>
+                    {user && (
+                        <Typography gutterBottom variant="h5" component="div">
+                            <IconButton aria-label="add to list">
+                                <FormatListBulletedOutlinedIcon />
+                            </IconButton>
+                            {isLiked ? (
+                                <IconButton aria-label="unmark as favourite">
+                                    <FavoriteIcon />
+                                </IconButton>
+                            ) : (
+                                <IconButton
+                                    aria-label="mark as favourite"
+                                    onClick={handleLike}
+                                >
+                                    <FavoriteBorderOutlinedIcon />
+                                </IconButton>
+                            )}
+                            <IconButton aria-label="add to your watchlist">
+                                <BookmarkBorderOutlinedIcon />
+                            </IconButton>
+                            <IconButton aria-label="rate it">
+                                <StarBorderOutlinedIcon />
+                            </IconButton>
+                        </Typography>
+                    )}
+                    <Typography gutterBottom variant="h6" component="h6">
+                        Overview
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                        {movieInfo?.overview}
+                    </Typography>
+                    <Divider />
+                    <Typography variant="h6" component="h6">
+                        Media
+                    </Typography>
+                    <ReactPlayer
+                        url={`https://www.youtube.com/watch?v=${movieVideos?.key}`}
+                        playing
+                        width="100%"
+                        controls
+                        style={{ padding: '2px' }}
+                        muted={true}
+                    />
+                    <Divider />
+                    <Typography variant="h6" component="h6">
+                        Top Billed Cast
+                    </Typography>
+                    <Credits movieId={movieId} />
+                    <Divider />
+                    <Typography variant="h6" component="h6">
+                        Reviews
+                    </Typography>
+                    {movieReviews.length > 0 ? (
+                        movieReviews.map((review: any) => (
+                            <Review key={review.id} review={review} />
+                        ))
+                    ) : (
+                        <Typography variant="body2">
+                            We don't have any reviews for {movieInfo?.title}.
+                        </Typography>
+                    )}
+                    <Divider />
+                    <Typography variant="h6" color="h6">
+                        Recommendations
+                    </Typography>
+                    <Recommendations
+                        movieId={movieId}
+                        movieTitle={movieInfo?.title}
+                    />
+                </CardContent>
+            </Card>
+            <Snackbar
+                open={notify.show}
+                autoHideDuration={6000}
+                onClose={handleClose}
+            >
+                <Alert
+                    onClose={handleClose}
+                    severity="success"
+                    sx={{ width: '100%' }}
+                >
+                    {notify.msg}
+                </Alert>
+            </Snackbar>
+        </>
     );
 }
 

@@ -37,8 +37,6 @@ function Person() {
             .catch((error: any) => console.log(error.message));
     }, [personId]);
 
-    console.log(personCasts);
-
     if (loading) {
         return <Spinner />;
     }
@@ -155,7 +153,7 @@ function Person() {
                                                 component="img"
                                                 height="140"
                                                 image={`https://image.tmdb.org/t/p/original/${x?.backdrop_path}`}
-                                                alt="green iguana"
+                                                alt="movie poster"
                                             />
                                             <CardContent>
                                                 <Typography

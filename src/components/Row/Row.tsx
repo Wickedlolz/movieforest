@@ -80,7 +80,7 @@ function Row({ movies }: RowProps) {
                                         component="img"
                                         height="140"
                                         image={`https://image.tmdb.org/t/p/original/${x?.backdrop_path}`}
-                                        alt="green iguana"
+                                        alt="movie poster"
                                     />
                                     <CardContent>
                                         <Typography
