@@ -47,8 +47,13 @@ function Movie() {
         if (movie.movieInfo?.id.toString() === movieId) return;
         setIsLoading(true);
 
-        getMovieDetailedInfo(movieId!)
-            .then(([movieInfo, movieVideos]) => {
+        async function fetchMovieDetailedInfo() {
+            try {
+                const [movieInfo, movieVideos] = await getMovieDetailedInfo(
+                    movieId!
+                );
+                const movieReviewsResult = await getMovieReviewsById(movieId!);
+
                 const index = movieVideos.results.findIndex(
                     (element: any) => element.type === 'Trailer'
                 );
@@ -56,35 +61,20 @@ function Movie() {
                     ...state,
                     movieInfo,
                     movieVideos: movieVideos.results[index],
+                    movieReviews: movieReviewsResult.results,
                 }));
+
                 setIsLoading(false);
-            })
-            .catch((error: any) =>
+            } catch (error: any) {
                 setNotify((state) => ({
                     ...state,
                     show: true,
                     msg: error.message,
-                }))
-            );
-    }, [movieId, setNotify, setMovie, movie.movieInfo?.id]);
-
-    useEffect(() => {
-        if (movie.movieInfo?.id.toString() === movieId) return;
-
-        getMovieReviewsById(movieId!)
-            .then((result) => {
-                setMovie((state) => ({
-                    ...state,
-                    movieReviews: result.results,
                 }));
-            })
-            .catch((error: any) =>
-                setNotify((state) => ({
-                    ...state,
-                    show: true,
-                    msg: error.message,
-                }))
-            );
+            }
+        }
+
+        fetchMovieDetailedInfo();
     }, [movieId, setNotify, setMovie, movie.movieInfo?.id]);
 
     useEffect(() => {
