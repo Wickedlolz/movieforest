@@ -34,13 +34,13 @@ function Movie() {
     const { user } = useUserAuth();
     const [movie, setMovie] = useRecoilState(movieState);
     const [savedMovies, setSavedMovies] = useState<MovieInfoProps[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const [isLiked, setIsLiked] = useState(false);
     const [notify, setNotify] = useRecoilState(notificationAtom);
 
     useEffect(() => {
-        if (movie.movieInfo?.id === movieId) return;
-        setLoading(true);
+        if (movie.movieInfo?.id.toString() === movieId) return;
+        setIsLoading(true);
 
         getMovieDetailedInfo(movieId!)
             .then(([movieInfo, movieVideos]) => {
@@ -52,7 +52,7 @@ function Movie() {
                     movieInfo,
                     movieVideos: movieVideos.results[index],
                 }));
-                setLoading(false);
+                setIsLoading(false);
             })
             .catch((error: any) =>
                 setNotify((state) => ({
@@ -64,7 +64,8 @@ function Movie() {
     }, [movieId, setNotify, setMovie, movie.movieInfo?.id]);
 
     useEffect(() => {
-        if (movie.movieInfo?.id === movieId) return;
+        if (movie.movieInfo?.id.toString() === movieId) return;
+
         getMovieReviewsById(movieId!)
             .then((result) => {
                 setMovie((state) => ({
@@ -133,7 +134,7 @@ function Movie() {
         setNotify((state) => ({ ...state, show: false, msg: '' }));
     };
 
-    if (loading) {
+    if (isLoading) {
         return <Spinner />;
     }
 
@@ -153,7 +154,9 @@ function Movie() {
                     <Typography gutterBottom variant="h5" component="div">
                         <Chip
                             label={`${
-                                movie.movieInfo!.vote_average * 10
+                                movie.movieInfo
+                                    ? movie.movieInfo.vote_average * 10
+                                    : 0
                             }% Match`}
                         />{' '}
                         <Chip label="HD" />{' '}
@@ -210,7 +213,7 @@ function Movie() {
                         Media
                     </Typography>
                     <ReactPlayer
-                        url={`https://www.youtube.com/watch?v=${movie?.movieVideos.key}`}
+                        url={`https://www.youtube.com/watch?v=${movie.movieVideos?.key}`}
                         playing
                         width="100%"
                         controls
@@ -226,7 +229,7 @@ function Movie() {
                     <Typography variant="h6" component="h6">
                         Reviews
                     </Typography>
-                    {movie.movieReviews!.length > 0 ? (
+                    {movie.movieReviews && movie.movieReviews!.length > 0 ? (
                         movie.movieReviews!.map((review: any) => (
                             <Review key={review.id} review={review} />
                         ))

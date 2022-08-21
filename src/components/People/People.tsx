@@ -14,20 +14,20 @@ import Spinner from '../common/Spinner';
 
 function People() {
     const [people, setPeople] = useRecoilState(peopleState);
-    const [loading, setLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         if (people) return;
-        setLoading(true);
+        setIsLoading(true);
         request(endpoints.POPULAR_ACTORS)
             .then((result: any) => {
                 setPeople(result.results);
-                setLoading(false);
+                setIsLoading(false);
             })
             .catch((error: any) => console.log(error.message));
     }, [people, setPeople]);
 
-    if (loading) {
+    if (isLoading) {
         return <Spinner />;
     }
 

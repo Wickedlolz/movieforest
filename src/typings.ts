@@ -17,9 +17,17 @@ export interface MovieProps {
     vote_count: number;
 }
 
-export interface MovieVideosProps {
+export interface MovieVideoProps {
+    iso_639_1: string;
+    iso_3166_1: string;
+    name: string;
+    key: string;
+    site: string;
+    size: number;
+    type: string;
+    official: boolean;
+    published_at: string;
     id: string;
-    results: [];
 }
 
 export interface MovieInfoProps {
@@ -88,4 +96,20 @@ export interface PersonCastsStateProps {
     backdrop_path: string | null;
     overview: string;
     poster_path: string | null;
+}
+
+export interface movieReviewsProps {
+    author: string;
+    author_details: {};
+    name: string;
+    username: string;
+    avatar_path: string | null;
+    rating: number | null;
+    content: string;
+    created_at: string;
+    id: string;
+    updated_at: string;
+    url: string;
+    total_pages: number;
+    total_results: number;
 }

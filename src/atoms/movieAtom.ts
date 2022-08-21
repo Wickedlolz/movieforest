@@ -1,10 +1,10 @@
 import { atom } from 'recoil';
-import { MovieInfoProps } from '../typings';
+import { MovieInfoProps, MovieVideoProps, movieReviewsProps } from '../typings';
 
 interface MovieStateProps {
     movieInfo: MovieInfoProps | null;
-    movieVideos: any | null;
-    movieReviews: [] | null;
+    movieVideos: MovieVideoProps | null;
+    movieReviews: movieReviewsProps[] | null;
 }
 
 const initialState = {
