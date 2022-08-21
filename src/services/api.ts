@@ -41,7 +41,6 @@ export async function request(url: string): Promise<any> {
 
         return result;
     } catch (error: any) {
-        console.log(error.message);
         throw error;
     }
 }
@@ -58,7 +57,6 @@ export async function requestByCategory(url: string): Promise<void> {
 
         return result.results;
     } catch (error: any) {
-        console.log(error.message);
         throw error;
     }
 }
@@ -68,7 +66,6 @@ export async function getAllMovies(url: string): Promise<MovieProps[] | any> {
         const response = await request(url);
         return response;
     } catch (error: any) {
-        console.log(error.message);
         throw error;
     }
 }
@@ -80,7 +77,6 @@ export async function getMovieDetailedInfo(movieId: string) {
             request(endpoints.GET_VIDEOS_BY_ID(movieId)),
         ]);
     } catch (error: any) {
-        console.log(error.message);
         throw error;
     }
 }

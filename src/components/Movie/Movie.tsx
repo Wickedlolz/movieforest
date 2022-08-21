@@ -22,12 +22,14 @@ import IconButton from '@mui/material/IconButton';
 import BookmarkBorderOutlinedIcon from '@mui/icons-material/BookmarkBorderOutlined';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import FormatListBulletedOutlinedIcon from '@mui/icons-material/FormatListBulletedOutlined';
-import StarBorderOutlinedIcon from '@mui/icons-material/StarBorderOutlined';
 import Credits from '../Credits/Credits';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import Review from '../Review/Review';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
+import Tooltip from '@mui/material/Tooltip';
+import GradingIcon from '@mui/icons-material/Grading';
+import BookmarkAddedIcon from '@mui/icons-material/BookmarkAdded';
 
 function Movie() {
     const { movieId } = useParams();
@@ -36,7 +38,10 @@ function Movie() {
     const [savedMovies, setSavedMovies] = useState<MovieInfoProps[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isLiked, setIsLiked] = useState(false);
+    const [isAddedToWatchlist, setIsAddedToWatchlist] = useState(false);
+    const [isAddedToMyList, setIsAddedToMyList] = useState(false);
     const [notify, setNotify] = useRecoilState(notificationAtom);
+    const userRef = doc(db, 'users', `${user?.email}`);
 
     useEffect(() => {
         if (movie.movieInfo?.id.toString() === movieId) return;
@@ -89,20 +94,44 @@ function Movie() {
                 ?.savedShows.find((x: any) => x.id === movie.movieInfo?.id);
             setSavedMovies(doc.data()?.savedShows);
 
+            const isInMyWatchlist: boolean = doc
+                .data()
+                ?.watchList.find((x: any) => x.id === movie.movieInfo?.id);
+            const isInMyList: boolean = doc
+                .data()
+                ?.myList.find((x: any) => x.id === movie.movieInfo?.id);
+
             if (liked) {
                 setIsLiked(true);
             } else {
                 setIsLiked(false);
+            }
+
+            if (isInMyWatchlist) {
+                setIsAddedToWatchlist(true);
+            } else {
+                setIsAddedToWatchlist(false);
+            }
+
+            if (isInMyList) {
+                setIsAddedToMyList(true);
+            } else {
+                setIsAddedToMyList(false);
             }
         });
     }, [user, movie]);
 
     const handleLike = async () => {
         try {
-            const userRef = doc(db, 'users', `${user?.email}`);
             await updateDoc(userRef, {
                 savedShows: arrayUnion(movie.movieInfo),
             });
+
+            setNotify((state) => ({
+                ...state,
+                show: true,
+                msg: `Successfully liked ${movie.movieInfo?.title}`,
+            }));
         } catch (error: any) {
             setNotify((state) => ({
                 ...state,
@@ -113,7 +142,6 @@ function Movie() {
     };
 
     const handleDislike = async () => {
-        const userRef = doc(db, 'users', `${user?.email}`);
         const result = savedMovies.filter(
             (x: any) => x.id.toString() !== movieId
         );
@@ -121,6 +149,12 @@ function Movie() {
         await updateDoc(userRef, {
             savedShows: result,
         });
+
+        setNotify((state) => ({
+            ...state,
+            show: true,
+            msg: `Successfully unlike ${movie.movieInfo?.title}`,
+        }));
     };
 
     const handleClose = (
@@ -132,6 +166,46 @@ function Movie() {
         }
 
         setNotify((state) => ({ ...state, show: false, msg: '' }));
+    };
+
+    const handleAddToWatchlist = async () => {
+        try {
+            await updateDoc(userRef, {
+                watchList: arrayUnion(movie.movieInfo),
+            });
+
+            setNotify((state) => ({
+                ...state,
+                show: true,
+                msg: `Successfully added ${movie.movieInfo?.title} to my Watch List.`,
+            }));
+        } catch (error: any) {
+            setNotify((state) => ({
+                ...state,
+                show: true,
+                msg: error.message,
+            }));
+        }
+    };
+
+    const handleAddToMyList = async () => {
+        try {
+            await updateDoc(userRef, {
+                myList: arrayUnion(movie.movieInfo),
+            });
+
+            setNotify((state) => ({
+                ...state,
+                show: true,
+                msg: `Successfully added ${movie.movieInfo?.title} to My List.`,
+            }));
+        } catch (error: any) {
+            setNotify((state) => ({
+                ...state,
+                show: true,
+                msg: error.message,
+            }));
+        }
     };
 
     if (isLoading) {
@@ -176,30 +250,58 @@ function Movie() {
                     </Typography>
                     {user && (
                         <Typography gutterBottom variant="h5" component="div">
-                            <IconButton aria-label="add to list">
-                                <FormatListBulletedOutlinedIcon />
-                            </IconButton>
-                            {isLiked ? (
-                                <IconButton
-                                    aria-label="unmark as favourite"
-                                    onClick={handleDislike}
-                                >
-                                    <FavoriteIcon />
-                                </IconButton>
+                            {isAddedToMyList ? (
+                                <Tooltip title="remove from my list">
+                                    <IconButton aria-label="remove from my list">
+                                        <GradingIcon />
+                                    </IconButton>
+                                </Tooltip>
                             ) : (
-                                <IconButton
-                                    aria-label="mark as favourite"
-                                    onClick={handleLike}
-                                >
-                                    <FavoriteBorderOutlinedIcon />
-                                </IconButton>
+                                <Tooltip title="Add to my list">
+                                    <IconButton
+                                        aria-label="add to my list"
+                                        onClick={handleAddToMyList}
+                                    >
+                                        <FormatListBulletedOutlinedIcon />
+                                    </IconButton>
+                                </Tooltip>
                             )}
-                            <IconButton aria-label="add to your watchlist">
-                                <BookmarkBorderOutlinedIcon />
-                            </IconButton>
-                            <IconButton aria-label="rate it">
-                                <StarBorderOutlinedIcon />
-                            </IconButton>
+                            {isLiked ? (
+                                <Tooltip title="Dislike">
+                                    <IconButton
+                                        aria-label="dislike"
+                                        onClick={handleDislike}
+                                    >
+                                        <FavoriteIcon />
+                                    </IconButton>
+                                </Tooltip>
+                            ) : (
+                                <Tooltip title="Like">
+                                    <IconButton
+                                        aria-label="like"
+                                        onClick={handleLike}
+                                    >
+                                        <FavoriteBorderOutlinedIcon />
+                                    </IconButton>
+                                </Tooltip>
+                            )}
+
+                            {isAddedToWatchlist ? (
+                                <Tooltip title="remove from your watchlist">
+                                    <IconButton aria-label="remove from your watchlist">
+                                        <BookmarkAddedIcon />
+                                    </IconButton>
+                                </Tooltip>
+                            ) : (
+                                <Tooltip title="Add to your watchlist">
+                                    <IconButton
+                                        aria-label="add to your watchlist"
+                                        onClick={handleAddToWatchlist}
+                                    >
+                                        <BookmarkBorderOutlinedIcon />
+                                    </IconButton>
+                                </Tooltip>
+                            )}
                         </Typography>
                     )}
                     <Typography gutterBottom variant="h6" component="h6">

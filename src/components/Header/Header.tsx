@@ -85,9 +85,30 @@ function Header() {
                                     open={Boolean(anchorEl)}
                                     onClose={handleClose}
                                 >
-                                    <MenuItem onClick={handleClose}>
+                                    <MenuItem
+                                        component={Link}
+                                        to="/my-account"
+                                        onClick={handleClose}
+                                    >
                                         My account
                                     </MenuItem>
+
+                                    <MenuItem
+                                        component={Link}
+                                        to="/my-list"
+                                        onClick={handleClose}
+                                    >
+                                        My List
+                                    </MenuItem>
+
+                                    <MenuItem
+                                        component={Link}
+                                        to="/my-likes"
+                                        onClick={handleClose}
+                                    >
+                                        My Likes
+                                    </MenuItem>
+
                                     <MenuItem onClick={handleSignOutClick}>
                                         Sign Out
                                     </MenuItem>

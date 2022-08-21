@@ -61,6 +61,8 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
             setUser(userCredentials.user);
             setDoc(doc(db, 'users', email), {
                 savedShows: [],
+                watchList: [],
+                myList: [],
             });
             setLoading(false);
             navigate('/');
