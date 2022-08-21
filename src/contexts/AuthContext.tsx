@@ -67,8 +67,8 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
             setLoading(false);
             navigate('/');
         } catch (error: any) {
-            alert(error.message);
             setLoading(true);
+            throw error;
         }
     };
 
@@ -85,8 +85,8 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
             setLoading(false);
             navigate('/');
         } catch (error: any) {
-            alert(error.message);
             setLoading(true);
+            throw error;
         }
     };
 

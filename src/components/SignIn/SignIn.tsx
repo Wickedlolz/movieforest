@@ -1,13 +1,13 @@
 import React from 'react';
 import { useUserAuth } from '../../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
+import MuiLink from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -16,7 +16,6 @@ import Container from '@mui/material/Container';
 
 function SignIn() {
     const { signIn } = useUserAuth();
-    const navigate = useNavigate();
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -28,11 +27,8 @@ function SignIn() {
             if (email === '' || password === '') {
                 throw new Error('All fields are required!');
             }
-
             await signIn(email, password);
-            navigate('/');
         } catch (error: any) {
-            console.log(error.message);
             alert(error.message);
         }
     };
@@ -53,12 +49,7 @@ function SignIn() {
                 <Typography component="h1" variant="h5">
                     Sign in
                 </Typography>
-                <Box
-                    component="form"
-                    onSubmit={handleSubmit}
-                    noValidate
-                    sx={{ mt: 1 }}
-                >
+                <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
                     <TextField
                         margin="normal"
                         required
@@ -93,14 +84,22 @@ function SignIn() {
                     </Button>
                     <Grid container>
                         <Grid item xs>
-                            <Link href="#" variant="body2">
+                            <MuiLink
+                                component={Link}
+                                to="/reset-password"
+                                variant="body2"
+                            >
                                 Forgot password?
-                            </Link>
+                            </MuiLink>
                         </Grid>
                         <Grid item>
-                            <Link href="#" variant="body2">
-                                {"Don't have an account? Sign Up"}
-                            </Link>
+                            <MuiLink
+                                component={Link}
+                                to="/signup"
+                                variant="body2"
+                            >
+                                Don't have an account? Sign Up
+                            </MuiLink>
                         </Grid>
                     </Grid>
                 </Box>
