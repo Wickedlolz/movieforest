@@ -1,8 +1,12 @@
 import { useEffect, useState } from 'react';
+import { useUserAuth } from '../../contexts/AuthContext';
 import useFetchRandomMovie from '../../hooks/useFetchRandomMovie';
 import { endpoints, requestByCategory } from '../../services/api';
 import { useRecoilState } from 'recoil';
 import { moviesState } from '../../atoms/moviesAtom';
+import { MovieInfoProps } from '../../typings';
+import { doc, onSnapshot } from 'firebase/firestore';
+import { db } from '../../firebase.config';
 
 import Feature from '../Feature/Feature';
 import Typography from '@mui/material/Typography';
@@ -11,7 +15,9 @@ import Spinner from '../common/Spinner';
 
 function Main() {
     const randomMovie = useFetchRandomMovie();
+    const { user } = useUserAuth();
     const [movies, setMovies] = useRecoilState(moviesState);
+    const [watchList, setWatchList] = useState<MovieInfoProps[]>([]);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -35,31 +41,46 @@ function Main() {
         fetchAllCategories();
     }, [setMovies, movies]);
 
+    useEffect(() => {
+        if (user?.email) {
+            onSnapshot(doc(db, 'users', `${user?.email}`), (doc) => {
+                setWatchList(doc.data()?.watchList);
+            });
+        }
+    }, [user?.email]);
+
+    if (loading) {
+        return <Spinner />;
+    }
+
     return (
         <>
             <Feature movie={randomMovie} />
-            {loading ? (
-                <Spinner />
-            ) : (
+
+            <Typography variant="body1" component="p">
+                Upcoming
+            </Typography>
+            <Row movies={movies?.upcoming} />
+            <Typography variant="body1" component="p">
+                Now Playing
+            </Typography>
+            <Row movies={movies?.nowPlaying} />
+            {watchList.length > 0 && (
                 <>
                     <Typography variant="body1" component="p">
-                        Upcoming
+                        My Watch List
                     </Typography>
-                    <Row movies={movies?.upcoming} />
-                    <Typography variant="body1" component="p">
-                        Now Playing
-                    </Typography>
-                    <Row movies={movies?.nowPlaying} />
-                    <Typography variant="body1" component="p">
-                        Popular
-                    </Typography>
-                    <Row movies={movies?.popular} />
-                    <Typography variant="body1" component="p">
-                        Top Rated
-                    </Typography>
-                    <Row movies={movies?.topRated} />
+                    <Row movies={watchList} />
                 </>
             )}
+            <Typography variant="body1" component="p">
+                Popular
+            </Typography>
+            <Row movies={movies?.popular} />
+            <Typography variant="body1" component="p">
+                Top Rated
+            </Typography>
+            <Row movies={movies?.topRated} />
         </>
     );
 }

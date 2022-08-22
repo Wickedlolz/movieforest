@@ -87,28 +87,11 @@ function Header() {
                                 >
                                     <MenuItem
                                         component={Link}
-                                        to="/my-account"
+                                        to="/account"
                                         onClick={handleClose}
                                     >
                                         My account
                                     </MenuItem>
-
-                                    <MenuItem
-                                        component={Link}
-                                        to="/my-list"
-                                        onClick={handleClose}
-                                    >
-                                        My List
-                                    </MenuItem>
-
-                                    <MenuItem
-                                        component={Link}
-                                        to="/my-likes"
-                                        onClick={handleClose}
-                                    >
-                                        My Likes
-                                    </MenuItem>
-
                                     <MenuItem onClick={handleSignOutClick}>
                                         Sign Out
                                     </MenuItem>
