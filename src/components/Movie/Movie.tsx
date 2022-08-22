@@ -47,7 +47,7 @@ function Movie() {
         if (movie.movieInfo?.id.toString() === movieId) return;
         setIsLoading(true);
 
-        async function fetchMovieDetailedInfo() {
+        async function fetchMovieDetailedInfo(): Promise<void> {
             try {
                 const [movieInfo, movieVideos] = await getMovieDetailedInfo(
                     movieId!

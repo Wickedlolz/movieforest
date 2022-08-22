@@ -1,6 +1,6 @@
-import React from 'react';
 import { useUserAuth } from '../../contexts/AuthContext';
 import { Link } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
 
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -13,21 +13,19 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import Alert from '@mui/material/Alert';
 
 function SignIn() {
     const { signIn } = useUserAuth();
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm();
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        const formData = new FormData(event.currentTarget);
-        const email = formData.get('email')?.toString() || '';
-        const password = formData.get('password')?.toString() || '';
-
+    const handleSignInSubmit = async (data: any): Promise<void> => {
         try {
-            if (email === '' || password === '') {
-                throw new Error('All fields are required!');
-            }
-            await signIn(email, password);
+            await signIn(data.email, data.password);
         } catch (error: any) {
             alert(error.message);
         }
@@ -49,26 +47,54 @@ function SignIn() {
                 <Typography component="h1" variant="h5">
                     Sign in
                 </Typography>
-                <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+                <Box
+                    component="form"
+                    onSubmit={handleSubmit(handleSignInSubmit)}
+                    sx={{ mt: 1 }}
+                >
+                    {errors.email?.type === 'required' && (
+                        <Alert severity="error">Email is required!</Alert>
+                    )}
+
+                    {errors.email?.type === 'pattern' && (
+                        <Alert severity="error">Invalid email.</Alert>
+                    )}
                     <TextField
                         margin="normal"
                         required
                         fullWidth
                         id="email"
                         label="Email Address"
-                        name="email"
                         autoComplete="email"
                         autoFocus
+                        error={Boolean(errors.email)}
+                        {...register('email', {
+                            required: true,
+                            pattern: /^[A-Za-z0-9]{2,}@[a-z]+\.[a-z]{2,3}$/,
+                        })}
                     />
+                    {errors.password?.type === 'required' && (
+                        <Alert severity="error">Password is required!</Alert>
+                    )}
+
+                    {errors.password?.type === 'minLength' && (
+                        <Alert severity="error">
+                            Password must be atleast 3 characters long.
+                        </Alert>
+                    )}
                     <TextField
                         margin="normal"
                         required
                         fullWidth
-                        name="password"
                         label="Password"
                         type="password"
                         id="password"
                         autoComplete="current-password"
+                        error={Boolean(errors.password)}
+                        {...register('password', {
+                            required: true,
+                            minLength: 3,
+                        })}
                     />
                     <FormControlLabel
                         control={<Checkbox value="remember" color="primary" />}
