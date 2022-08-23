@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useUserAuth } from '../../contexts/AuthContext';
-import { MovieInfoProps } from '../../typings';
+import { MovieInfoProps } from '../../interfaces/movie';
 
 import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from '../../firebase.config';

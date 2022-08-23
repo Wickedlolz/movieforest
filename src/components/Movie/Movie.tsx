@@ -5,7 +5,7 @@ import { getMovieDetailedInfo, getMovieReviewsById } from '../../services/api';
 import ReactPlayer from 'react-player/lazy';
 import { db } from '../../firebase.config';
 import { doc, updateDoc, arrayUnion, onSnapshot } from 'firebase/firestore';
-import { MovieInfoProps } from '../../typings';
+import { MovieInfoProps } from '../../interfaces/movie';
 import { useRecoilState } from 'recoil';
 import { movieState } from '../../atoms/movieAtom';
 import { notificationAtom } from '../../atoms/notificationAtom';
@@ -44,7 +44,7 @@ function Movie() {
     const userRef = doc(db, 'users', `${user?.email}`);
 
     useEffect(() => {
-        if (movie.movieInfo?.id.toString() === movieId) return;
+        if (movie.info?.id.toString() === movieId) return;
         setIsLoading(true);
 
         async function fetchMovieDetailedInfo(): Promise<void> {
@@ -59,9 +59,9 @@ function Movie() {
                 );
                 setMovie((state) => ({
                     ...state,
-                    movieInfo,
-                    movieVideos: movieVideos.results[index],
-                    movieReviews: movieReviewsResult.results,
+                    info: movieInfo,
+                    video: movieVideos.results[index],
+                    reviews: movieReviewsResult.results,
                 }));
 
                 setIsLoading(false);
@@ -75,21 +75,21 @@ function Movie() {
         }
 
         fetchMovieDetailedInfo();
-    }, [movieId, setNotify, setMovie, movie.movieInfo?.id]);
+    }, [movieId, setNotify, setMovie, movie.info?.id]);
 
     useEffect(() => {
         onSnapshot(doc(db, 'users', `${user?.email}`), (doc) => {
             const liked: boolean = doc
                 .data()
-                ?.savedShows.find((x: any) => x.id === movie.movieInfo?.id);
+                ?.savedShows.find((x: any) => x.id === movie.info?.id);
             setSavedMovies(doc.data()?.savedShows);
 
             const isInMyWatchlist: boolean = doc
                 .data()
-                ?.watchList.find((x: any) => x.id === movie.movieInfo?.id);
+                ?.watchList.find((x: any) => x.id === movie.info?.id);
             const isInMyList: boolean = doc
                 .data()
-                ?.myList.find((x: any) => x.id === movie.movieInfo?.id);
+                ?.myList.find((x: any) => x.id === movie.info?.id);
 
             if (liked) {
                 setIsLiked(true);
@@ -114,13 +114,13 @@ function Movie() {
     const handleLike = async () => {
         try {
             await updateDoc(userRef, {
-                savedShows: arrayUnion(movie.movieInfo),
+                savedShows: arrayUnion(movie.info),
             });
 
             setNotify((state) => ({
                 ...state,
                 show: true,
-                msg: `Successfully liked ${movie.movieInfo?.title}`,
+                msg: `Successfully liked ${movie.info?.title}`,
             }));
         } catch (error: any) {
             setNotify((state) => ({
@@ -143,7 +143,7 @@ function Movie() {
         setNotify((state) => ({
             ...state,
             show: true,
-            msg: `Successfully unlike ${movie.movieInfo?.title}`,
+            msg: `Successfully unlike ${movie.info?.title}`,
         }));
     };
 
@@ -161,13 +161,13 @@ function Movie() {
     const handleAddToWatchlist = async () => {
         try {
             await updateDoc(userRef, {
-                watchList: arrayUnion(movie.movieInfo),
+                watchList: arrayUnion(movie.info),
             });
 
             setNotify((state) => ({
                 ...state,
                 show: true,
-                msg: `Successfully added ${movie.movieInfo?.title} to my Watch List.`,
+                msg: `Successfully added ${movie.info?.title} to my Watch List.`,
             }));
         } catch (error: any) {
             setNotify((state) => ({
@@ -181,13 +181,13 @@ function Movie() {
     const handleAddToMyList = async () => {
         try {
             await updateDoc(userRef, {
-                myList: arrayUnion(movie.movieInfo),
+                myList: arrayUnion(movie.info),
             });
 
             setNotify((state) => ({
                 ...state,
                 show: true,
-                msg: `Successfully added ${movie.movieInfo?.title} to My List.`,
+                msg: `Successfully added ${movie.info?.title} to My List.`,
             }));
         } catch (error: any) {
             setNotify((state) => ({
@@ -208,32 +208,30 @@ function Movie() {
                 <CardMedia
                     component="img"
                     height="340"
-                    image={`https://image.tmdb.org/t/p/original/${movie.movieInfo?.backdrop_path}`}
+                    image={`https://image.tmdb.org/t/p/original/${movie.info?.backdrop_path}`}
                     alt="movie poster"
                 />
                 <CardContent>
                     <Typography gutterBottom variant="h5" component="div">
-                        {movie.movieInfo?.title}
+                        {movie.info?.title}
                     </Typography>
                     <Typography gutterBottom variant="h5" component="div">
                         <Chip
                             label={`${
-                                movie.movieInfo
-                                    ? movie.movieInfo.vote_average * 10
-                                    : 0
+                                movie.info ? movie.info.vote_average * 10 : 0
                             }% Match`}
                         />{' '}
                         <Chip label="HD" />{' '}
                         <Chip
-                            label={movie.movieInfo?.original_language.toLocaleUpperCase()}
+                            label={movie.info?.original_language.toLocaleUpperCase()}
                         />{' '}
                         <Chip
                             variant="outlined"
-                            label={movie.movieInfo?.release_date}
+                            label={movie.info?.release_date}
                         />{' '}
                         <Chip
                             variant="outlined"
-                            label={movie.movieInfo?.genres
+                            label={movie.info?.genres
                                 .map((x: any) => x.name)
                                 .join(', ')}
                         />
@@ -298,14 +296,14 @@ function Movie() {
                         Overview
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                        {movie.movieInfo?.overview}
+                        {movie.info?.overview}
                     </Typography>
                     <Divider />
                     <Typography variant="h6" component="h6">
                         Media
                     </Typography>
                     <ReactPlayer
-                        url={`https://www.youtube.com/watch?v=${movie.movieVideos?.key}`}
+                        url={`https://www.youtube.com/watch?v=${movie.video?.key}`}
                         playing
                         width="100%"
                         controls
@@ -321,14 +319,13 @@ function Movie() {
                     <Typography variant="h6" component="h6">
                         Reviews
                     </Typography>
-                    {movie.movieReviews && movie.movieReviews!.length > 0 ? (
-                        movie.movieReviews!.map((review: any) => (
+                    {movie.reviews && movie.reviews!.length > 0 ? (
+                        movie.reviews!.map((review: any) => (
                             <Review key={review.id} review={review} />
                         ))
                     ) : (
                         <Typography variant="body2">
-                            We don't have any reviews for{' '}
-                            {movie.movieInfo?.title}.
+                            We don't have any reviews for {movie.info?.title}.
                         </Typography>
                     )}
                     <Divider />
@@ -337,7 +334,7 @@ function Movie() {
                     </Typography>
                     <Recommendations
                         movieId={movieId}
-                        movieTitle={movie.movieInfo?.title}
+                        movieTitle={movie.info?.title}
                     />
                 </CardContent>
             </Card>

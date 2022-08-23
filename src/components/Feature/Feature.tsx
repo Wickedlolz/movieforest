@@ -3,7 +3,7 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import { MovieProps } from '../../typings';
+import { MovieProps } from '../../interfaces/movie';
 import Button from '@mui/material/Button';
 
 interface MainFeaturedProps {

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { request, endpoints } from '../../services/api';
-import { MovieProps } from '../../typings';
+import { MovieProps } from '../../interfaces/movie';
 import Row from '../Row/Row';
 import Typography from '@mui/material/Typography';
 

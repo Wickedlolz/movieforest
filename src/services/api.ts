@@ -1,8 +1,5 @@
-import {
-    MovieProps,
-    PersonStateProps,
-    PersonCastsStateProps,
-} from '../typings';
+import { MovieProps } from '../interfaces/movie';
+import { PersonStateProps, PersonCastsStateProps } from '../interfaces/person';
 
 const API_KEY: string = '356b2832036b27a06f949b42c2d89747';
 const baseUrl: string = `https://api.themoviedb.org/3`;
@@ -27,6 +24,9 @@ export const endpoints = {
         `/movie/${movieId}/credits?api_key=${API_KEY}&language=en-US`,
     GET_MOVIE_REVIEWS_BY_ID: (movieId: string) =>
         `/movie/${movieId}/reviews?api_key=${API_KEY}&language=en-US&page=1`,
+    GET_SHOWS_ON_AIR: `/tv/on_the_air?api_key=${API_KEY}&language=en-US&page=1`,
+    GET_SHOW_BY_ID_WITH_VIDEOS: (tvId: string) =>
+        `/tv/${tvId}?api_key=${API_KEY}&language=en-US&append_to_response=videos`,
 };
 
 export async function request(url: string): Promise<any> {
@@ -103,4 +103,8 @@ export async function getPersonMovieCredits(
         console.log(error);
         throw error;
     }
+}
+
+export async function getTvShowById(tvId: string): Promise<any> {
+    return await request(endpoints.GET_SHOW_BY_ID_WITH_VIDEOS(tvId));
 }

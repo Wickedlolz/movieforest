@@ -1,16 +1,20 @@
 import { atom } from 'recoil';
-import { MovieInfoProps, MovieVideoProps, movieReviewsProps } from '../typings';
+import {
+    MovieInfoProps,
+    MovieVideoProps,
+    MovieReviewsProps,
+} from '../interfaces/movie';
 
 interface MovieStateProps {
-    movieInfo: MovieInfoProps | null;
-    movieVideos: MovieVideoProps | null;
-    movieReviews: movieReviewsProps[] | null;
+    info: MovieInfoProps | null;
+    video: MovieVideoProps | null;
+    reviews: MovieReviewsProps[] | null;
 }
 
 const initialState = {
-    movieInfo: null,
-    movieVideos: null,
-    movieReviews: null,
+    info: null,
+    video: null,
+    reviews: null,
 };
 
 export const movieState = atom<MovieStateProps>({

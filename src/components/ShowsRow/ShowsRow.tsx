@@ -1,4 +1,6 @@
 import { Link } from 'react-router-dom';
+import { IShow } from '../../interfaces/show';
+
 import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -7,14 +9,13 @@ import CardActionArea from '@mui/material/CardActionArea';
 import Grid from '@mui/material/Grid';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
-import { MovieProps, MovieInfoProps } from '../../interfaces/movie';
 import Spinner from '../common/Spinner';
 
-interface RowProps {
-    movies: MovieProps[] | MovieInfoProps[];
+interface ShowRowProps {
+    showsOnAir: IShow[];
 }
 
-function Row({ movies }: RowProps) {
+function ShowsRow({ showsOnAir }: ShowRowProps) {
     return (
         <Carousel
             additionalTransfrom={0}
@@ -64,16 +65,16 @@ function Row({ movies }: RowProps) {
             slidesToSlide={1}
             swipeable
         >
-            {!movies ? (
+            {!showsOnAir ? (
                 <Spinner />
             ) : (
-                movies.map((x) => (
+                showsOnAir.map((x) => (
                     <Grid container spacing={1} key={x.id}>
                         <Grid item xs={11}>
                             <Card
                                 sx={{ maxWidth: 345, textDecoration: 'none' }}
                                 component={Link}
-                                to={`/movie/${x.id}`}
+                                to={`/tv/${x.id}`}
                             >
                                 <CardActionArea>
                                     <CardMedia
@@ -88,7 +89,7 @@ function Row({ movies }: RowProps) {
                                             variant="subtitle1"
                                             component="div"
                                         >
-                                            {x.title}
+                                            {x.name || x.original_name}
                                         </Typography>
                                     </CardContent>
                                 </CardActionArea>
@@ -101,4 +102,4 @@ function Row({ movies }: RowProps) {
     );
 }
 
-export default Row;
+export default ShowsRow;

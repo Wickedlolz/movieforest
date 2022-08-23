@@ -1,7 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getPersonById, getPersonMovieCredits } from '../../services/api';
-import { PersonStateProps, PersonCastsStateProps } from '../../typings';
+import {
+    PersonStateProps,
+    PersonCastsStateProps,
+} from '../../interfaces/person';
 
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
