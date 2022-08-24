@@ -26,7 +26,6 @@ function Feature({ movie }: MainFeaturedProps) {
                 })`,
             }}
         >
-            {/* Increase the priority of the hero background image */}
             {
                 <img
                     style={{ display: 'none' }}

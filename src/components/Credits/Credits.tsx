@@ -121,7 +121,7 @@ function Credits({ movieId, tvId }: CreditsProps) {
                                         component="img"
                                         height="140"
                                         image={`https://image.tmdb.org/t/p/original/${x?.profile_path}`}
-                                        alt="green iguana"
+                                        alt="actor image"
                                     />
                                     <CardContent>
                                         <Typography

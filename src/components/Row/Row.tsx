@@ -81,7 +81,9 @@ function Row({ movies }: RowProps) {
                                     <CardMedia
                                         component="img"
                                         height="140"
-                                        image={`https://image.tmdb.org/t/p/original/${x?.backdrop_path}`}
+                                        image={`https://image.tmdb.org/t/p/original/${
+                                            x?.backdrop_path || x?.poster_path
+                                        }`}
                                         alt="movie poster"
                                     />
                                     <CardContent>
