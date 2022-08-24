@@ -3,6 +3,7 @@ import {
     MovieInfoProps,
     MovieVideoProps,
     MovieReviewsProps,
+    MovieProps,
 } from '../interfaces/movie';
 import { ActorsCredits } from '../interfaces/person';
 
@@ -11,6 +12,7 @@ interface IMovieState {
     video: MovieVideoProps | null;
     reviews: MovieReviewsProps[] | null;
     credits: ActorsCredits[] | null;
+    recommendations: MovieProps[] | [];
 }
 
 const initialState = {
@@ -18,6 +20,7 @@ const initialState = {
     video: null,
     reviews: null,
     credits: null,
+    recommendations: [],
 };
 
 export const movieState = atom<IMovieState>({

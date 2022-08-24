@@ -74,7 +74,9 @@ function Row({ movies }: RowProps) {
                                 sx={{ maxWidth: 345, textDecoration: 'none' }}
                                 component={Link}
                                 to={`${
-                                    x.episode_run_time ? '/tv/' : '/movie/'
+                                    x.episode_run_time || x.media_type === 'tv'
+                                        ? '/tv/'
+                                        : '/movie/'
                                 }${x.id}`}
                             >
                                 <CardActionArea>
@@ -92,7 +94,7 @@ function Row({ movies }: RowProps) {
                                             variant="subtitle1"
                                             component="div"
                                         >
-                                            {x.title}
+                                            {x.title || x.name}
                                         </Typography>
                                     </CardContent>
                                 </CardActionArea>

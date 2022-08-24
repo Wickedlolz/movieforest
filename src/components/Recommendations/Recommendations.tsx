@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
+import { useRecoilState } from 'recoil';
+import { movieState } from '../../atoms/movieAtom';
+import { showState } from '../../atoms/showAtom';
 import { request, endpoints } from '../../services/api';
 import { MovieProps } from '../../interfaces/movie';
 import Typography from '@mui/material/Typography';
-import ShowsRow from '../ShowsRow/ShowsRow';
+import Row from '../Row/Row';
 
 interface RecommendationsProps {
     movieId?: string | undefined;
@@ -11,35 +14,47 @@ interface RecommendationsProps {
 }
 
 function Recommendations({ movieId, tvId, title }: RecommendationsProps) {
-    const [recommendedMovies, setRecommendedMovies] = useState<MovieProps[]>(
-        []
-    );
+    const [movie, setMovie] = useRecoilState(movieState);
+    const [show, setShow] = useRecoilState(showState);
+    console.log(show);
 
     useEffect(() => {
-        if (movieId) {
+        if (movieId && movieId !== movie.info?.id.toString()) {
             request(endpoints.GET_RECOMMENDATIONS_BY_ID(movieId!))
                 .then((result) => {
-                    setRecommendedMovies(result.results);
+                    setMovie((state) => ({
+                        ...state,
+                        recommendations: result.results,
+                    }));
                 })
                 .catch((error: any) => {
                     console.log(error.message);
                 });
         }
-        if (tvId) {
+
+        if (tvId && tvId !== show.info?.id.toString()) {
             request(endpoints.GET_SHOW_RECOMENDATIONS_BY_ID(tvId!))
                 .then((result) => {
-                    setRecommendedMovies(result.results);
+                    setShow((state) => ({
+                        ...state,
+                        recommendations: result.results,
+                    }));
                 })
                 .catch((error: any) => {
                     console.log(error.message);
                 });
         }
-    }, [movieId, tvId]);
+    }, [movieId, tvId, movie.info?.id, show.info?.id, setMovie, setShow]);
 
     return (
         <Typography component="div">
-            {recommendedMovies.length > 0 ? (
-                <ShowsRow shows={recommendedMovies} />
+            {(movieId ? movie.recommendations : show.recommendations).length >
+            0 ? (
+                <Row
+                    movies={
+                        movieId ? movie.recommendations : show.recommendations
+                    }
+                />
             ) : (
                 <Typography gutterBottom variant="subtitle1" component="p">
                     We don't have enough data to suggest any{' '}

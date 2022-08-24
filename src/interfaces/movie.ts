@@ -59,6 +59,8 @@ export interface MovieInfoProps {
     vote_average: number;
     vote_count: number;
     episode_run_time?: number;
+    media_type?: string;
+    name?: string;
 }
 
 export interface MovieReviewsProps {
