@@ -1,9 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import { movieState } from '../../atoms/movieAtom';
 import { showState } from '../../atoms/showAtom';
 import { request, endpoints } from '../../services/api';
-import { MovieProps } from '../../interfaces/movie';
 import Typography from '@mui/material/Typography';
 import Row from '../Row/Row';
 
@@ -16,7 +15,6 @@ interface RecommendationsProps {
 function Recommendations({ movieId, tvId, title }: RecommendationsProps) {
     const [movie, setMovie] = useRecoilState(movieState);
     const [show, setShow] = useRecoilState(showState);
-    console.log(show);
 
     useEffect(() => {
         if (movieId && movieId !== movie.info?.id.toString()) {
