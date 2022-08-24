@@ -78,8 +78,8 @@ function Movie() {
         onSnapshot(doc(db, 'users', `${user?.email}`), (doc) => {
             const liked: boolean = doc
                 .data()
-                ?.savedShows.find((x: any) => x.id === movie.info?.id);
-            setSavedMovies(doc.data()?.savedShows);
+                ?.savedMovies.find((x: any) => x.id === movie.info?.id);
+            setSavedMovies(doc.data()?.savedMovies);
 
             const isInMyWatchlist: boolean = doc
                 .data()
@@ -102,7 +102,7 @@ function Movie() {
     const handleLike = async () => {
         try {
             await updateDoc(userRef, {
-                savedShows: arrayUnion(movie.info),
+                savedMovies: arrayUnion(movie.info),
             });
 
             setNotify((state) => ({
@@ -125,7 +125,7 @@ function Movie() {
         );
 
         await updateDoc(userRef, {
-            savedShows: result,
+            savedMovies: result,
         });
 
         setNotify((state) => ({

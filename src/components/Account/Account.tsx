@@ -14,12 +14,12 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 function Account() {
     const { user } = useUserAuth();
-    const [myLikes, setMyLikes] = useState<MovieInfoProps[]>([]);
+    const [myLikedMovies, setMyLikedMovie] = useState<MovieInfoProps[]>([]);
 
     useEffect(() => {
         onSnapshot(doc(db, 'users', `${user?.email}`), (doc) => {
-            if (doc.data()?.savedShows !== undefined) {
-                setMyLikes(doc.data()?.savedShows);
+            if (doc.data()?.savedMovies !== undefined) {
+                setMyLikedMovie(doc.data()?.savedMovies);
             }
         });
     }, [user?.email]);
@@ -57,13 +57,13 @@ function Account() {
                 </AccordionSummary>
                 <AccordionDetails>
                     <Typography variant="body1" component="p">
-                        My Likes
+                        My Liked Movies
                     </Typography>
-                    {myLikes.length > 0 ? (
-                        <Row movies={myLikes} />
+                    {myLikedMovies.length > 0 ? (
+                        <Row movies={myLikedMovies} />
                     ) : (
                         <Typography variant="body2" component="p">
-                            No don't have any liked movies yet.
+                            You don't have any liked movies yet.
                         </Typography>
                     )}
                 </AccordionDetails>
