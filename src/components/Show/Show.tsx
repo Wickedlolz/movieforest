@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useUserAuth } from '../../contexts/AuthContext';
 import { getTvShowById, getShowReviewsById } from '../../services/api';
 import ReactPlayer from 'react-player/lazy';
@@ -31,8 +31,9 @@ import BookmarkAddedIcon from '@mui/icons-material/BookmarkAdded';
 function Show() {
     const { tvId } = useParams();
     const { user } = useUserAuth();
+    const navigate = useNavigate();
     const [show, setShow] = useRecoilState(showState);
-    const [savedMovies, setSavedMovies] = useState([]);
+    const [likedShows, setLikedShows] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isLiked, setIsLiked] = useState(false);
     const [isAddedToWatchlist, setIsAddedToWatchlist] = useState(false);
@@ -64,17 +65,101 @@ function Show() {
                 setIsLoading(false);
             } catch (error: any) {
                 console.log(error);
+                navigate('/', { replace: true });
             }
         }
 
         fetchShowDetailedInfo();
-    }, [tvId, setShow, show.info?.id]);
+    }, [tvId, setShow, show.info?.id, navigate]);
 
-    const handleLike = () => {};
+    useEffect(() => {
+        onSnapshot(doc(db, 'users', `${user?.email}`), (doc) => {
+            const liked: boolean = doc
+                .data()
+                ?.savedShows.find((x: any) => x.id === show.info?.id);
+            setLikedShows(doc.data()?.savedShows);
 
-    const handleDislike = () => {};
+            const isInMyWatchlist: boolean = doc
+                .data()
+                ?.watchList.find((x: any) => x.id === show.info?.id);
 
-    const handleAddToWatchlist = () => {};
+            if (liked) {
+                setIsLiked(true);
+            } else {
+                setIsLiked(false);
+            }
+
+            if (isInMyWatchlist) {
+                setIsAddedToWatchlist(true);
+            } else {
+                setIsAddedToWatchlist(false);
+            }
+        });
+    }, [user, show.info?.id]);
+
+    const handleLike = async () => {
+        try {
+            await updateDoc(userRef, {
+                savedShows: arrayUnion(show.info),
+            });
+
+            setNotify((state) => ({
+                ...state,
+                show: true,
+                msg: `Successfully liked ${show.info?.name}`,
+            }));
+        } catch (error: any) {
+            setNotify((state) => ({
+                ...state,
+                show: true,
+                msg: 'Something went wrong, try again later.',
+            }));
+        }
+    };
+
+    const handleDislike = async () => {
+        try {
+            const result = likedShows.filter(
+                (x: any) => x.id.toString() !== tvId
+            );
+
+            await updateDoc(userRef, {
+                savedShows: result,
+            });
+
+            setNotify((state) => ({
+                ...state,
+                show: true,
+                msg: `Successfully unlike ${show.info?.name}`,
+            }));
+        } catch (error: any) {
+            setNotify((state) => ({
+                ...state,
+                show: true,
+                msg: `Something went wrong, try again later.`,
+            }));
+        }
+    };
+
+    const handleAddToWatchlist = async () => {
+        try {
+            await updateDoc(userRef, {
+                watchList: arrayUnion(show.info),
+            });
+
+            setNotify((state) => ({
+                ...state,
+                show: true,
+                msg: `Successfully added ${show.info?.name} to my Watch List.`,
+            }));
+        } catch (error: any) {
+            setNotify((state) => ({
+                ...state,
+                show: true,
+                msg: 'Something went wrong, try again later.',
+            }));
+        }
+    };
 
     const handleClose = (
         event?: React.SyntheticEvent | Event,

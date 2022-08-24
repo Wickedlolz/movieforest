@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useUserAuth } from '../../contexts/AuthContext';
 import { getMovieDetailedInfo, getMovieReviewsById } from '../../services/api';
 import ReactPlayer from 'react-player/lazy';
@@ -31,6 +31,7 @@ import BookmarkAddedIcon from '@mui/icons-material/BookmarkAdded';
 
 function Movie() {
     const { movieId } = useParams();
+    const navigate = useNavigate();
     const { user } = useUserAuth();
     const [movie, setMovie] = useRecoilState(movieState);
     const [savedMovies, setSavedMovies] = useState<MovieInfoProps[]>([]);
@@ -68,11 +69,12 @@ function Movie() {
                     show: true,
                     msg: error.message,
                 }));
+                navigate('/', { replace: true });
             }
         }
 
         fetchMovieDetailedInfo();
-    }, [movieId, setNotify, setMovie, movie.info?.id]);
+    }, [movieId, setNotify, setMovie, movie.info?.id, navigate]);
 
     useEffect(() => {
         onSnapshot(doc(db, 'users', `${user?.email}`), (doc) => {
@@ -114,25 +116,33 @@ function Movie() {
             setNotify((state) => ({
                 ...state,
                 show: true,
-                msg: error.message,
+                msg: 'Something went wrong, try again later.',
             }));
         }
     };
 
     const handleDislike = async () => {
-        const result = savedMovies.filter(
-            (x: any) => x.id.toString() !== movieId
-        );
+        try {
+            const result = savedMovies.filter(
+                (x: any) => x.id.toString() !== movieId
+            );
 
-        await updateDoc(userRef, {
-            savedMovies: result,
-        });
+            await updateDoc(userRef, {
+                savedMovies: result,
+            });
 
-        setNotify((state) => ({
-            ...state,
-            show: true,
-            msg: `Successfully unlike ${movie.info?.title}`,
-        }));
+            setNotify((state) => ({
+                ...state,
+                show: true,
+                msg: `Successfully unlike ${movie.info?.title}`,
+            }));
+        } catch (error: any) {
+            setNotify((state) => ({
+                ...state,
+                show: true,
+                msg: `Something went wrong, try again later.`,
+            }));
+        }
     };
 
     const handleClose = (

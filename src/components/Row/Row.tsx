@@ -73,7 +73,9 @@ function Row({ movies }: RowProps) {
                             <Card
                                 sx={{ maxWidth: 345, textDecoration: 'none' }}
                                 component={Link}
-                                to={`/movie/${x.id}`}
+                                to={`${
+                                    x.episode_run_time ? '/tv/' : '/movie/'
+                                }${x.id}`}
                             >
                                 <CardActionArea>
                                     <CardMedia

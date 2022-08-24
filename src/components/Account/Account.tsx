@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useUserAuth } from '../../contexts/AuthContext';
 import { MovieInfoProps } from '../../interfaces/movie';
+import { IShow } from '../../interfaces/show';
 
 import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from '../../firebase.config';
@@ -11,15 +12,21 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ShowsRow from '../ShowsRow/ShowsRow';
 
 function Account() {
     const { user } = useUserAuth();
-    const [myLikedMovies, setMyLikedMovie] = useState<MovieInfoProps[]>([]);
+    const [myLikedMovies, setMyLikedMovies] = useState<MovieInfoProps[]>([]);
+    const [myLikedShows, setMyLikedShows] = useState<IShow[]>([]);
 
     useEffect(() => {
         onSnapshot(doc(db, 'users', `${user?.email}`), (doc) => {
             if (doc.data()?.savedMovies !== undefined) {
-                setMyLikedMovie(doc.data()?.savedMovies);
+                setMyLikedMovies(doc.data()?.savedMovies);
+            }
+
+            if (doc.data()?.savedShows !== undefined) {
+                setMyLikedShows(doc.data()?.savedShows);
             }
         });
     }, [user?.email]);
@@ -64,6 +71,16 @@ function Account() {
                     ) : (
                         <Typography variant="body2" component="p">
                             You don't have any liked movies yet.
+                        </Typography>
+                    )}
+                    <Typography variant="body1" component="p">
+                        My Liked Shows
+                    </Typography>
+                    {myLikedShows.length > 0 ? (
+                        <ShowsRow shows={myLikedShows} />
+                    ) : (
+                        <Typography variant="body2" component="p">
+                            You don't have any liked shows yet.
                         </Typography>
                     )}
                 </AccordionDetails>

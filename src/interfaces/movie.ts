@@ -15,6 +15,7 @@ export interface MovieProps {
     poster_path: string;
     vote_average: number;
     vote_count: number;
+    episode_run_time?: number;
 }
 
 export interface MovieVideoProps {
@@ -57,6 +58,7 @@ export interface MovieInfoProps {
     video: false;
     vote_average: number;
     vote_count: number;
+    episode_run_time?: number;
 }
 
 export interface MovieReviewsProps {
