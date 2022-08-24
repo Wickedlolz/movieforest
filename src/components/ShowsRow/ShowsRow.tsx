@@ -12,10 +12,10 @@ import 'react-multi-carousel/lib/styles.css';
 import Spinner from '../common/Spinner';
 
 interface ShowRowProps {
-    showsOnAir: IShow[];
+    shows: IShow[];
 }
 
-function ShowsRow({ showsOnAir }: ShowRowProps) {
+function ShowsRow({ shows }: ShowRowProps) {
     return (
         <Carousel
             additionalTransfrom={0}
@@ -65,10 +65,10 @@ function ShowsRow({ showsOnAir }: ShowRowProps) {
             slidesToSlide={1}
             swipeable
         >
-            {!showsOnAir ? (
+            {!shows ? (
                 <Spinner />
             ) : (
-                showsOnAir.map((x) => (
+                shows.map((x) => (
                     <Grid container spacing={1} key={x.id}>
                         <Grid item xs={11}>
                             <Card

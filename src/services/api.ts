@@ -27,6 +27,12 @@ export const endpoints = {
     GET_SHOWS_ON_AIR: `/tv/on_the_air?api_key=${API_KEY}&language=en-US&page=1`,
     GET_SHOW_BY_ID_WITH_VIDEOS: (tvId: string) =>
         `/tv/${tvId}?api_key=${API_KEY}&language=en-US&append_to_response=videos`,
+    GET_SHOW_CREDITS: (showId: string) =>
+        `/tv/${showId}/credits?api_key=${API_KEY}&language=en-US`,
+    GET_SHOW_REVIEWS_BY_ID: (showId: string) =>
+        `/tv/${showId}/reviews?api_key=${API_KEY}&language=en-US&page=1`,
+    GET_SHOW_RECOMENDATIONS_BY_ID: (showId: string) =>
+        `/tv/${showId}/recommendations?api_key=${API_KEY}&language=en-US&page=1`,
 };
 
 export async function request(url: string): Promise<any> {
@@ -83,6 +89,10 @@ export async function getMovieDetailedInfo(movieId: string) {
 
 export async function getMovieReviewsById(movieId: string): Promise<any> {
     return request(endpoints.GET_MOVIE_REVIEWS_BY_ID(movieId));
+}
+
+export async function getShowReviewsById(showId: string): Promise<any> {
+    return request(endpoints.GET_SHOW_REVIEWS_BY_ID(showId));
 }
 
 export async function getPersonById(

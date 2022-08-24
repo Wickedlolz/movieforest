@@ -12,7 +12,8 @@ import 'react-multi-carousel/lib/styles.css';
 import Spinner from '../common/Spinner';
 
 interface CreditsProps {
-    movieId: string | undefined;
+    movieId?: string | undefined;
+    tvId?: string | undefined;
 }
 
 interface ActorsCredits {
@@ -30,18 +31,30 @@ interface ActorsCredits {
     order: number;
 }
 
-function Credits({ movieId }: CreditsProps) {
+function Credits({ movieId, tvId }: CreditsProps) {
     const [credits, setCredits] = useState<ActorsCredits[] | null>(null);
 
     useEffect(() => {
-        request(endpoints.GET_MOVIE_CREDITS(movieId!))
-            .then((result) => {
-                setCredits(result.cast);
-            })
-            .catch((error: any) => {
-                console.log(error.message);
-            });
-    }, [movieId]);
+        if (movieId) {
+            request(endpoints.GET_MOVIE_CREDITS(movieId!))
+                .then((result) => {
+                    setCredits(result.cast);
+                })
+                .catch((error: any) => {
+                    console.log(error.message);
+                });
+        }
+
+        if (tvId) {
+            request(endpoints.GET_SHOW_CREDITS(tvId))
+                .then((result) => {
+                    setCredits(result.cast);
+                })
+                .catch((error: any) => {
+                    console.log(error.message);
+                });
+        }
+    }, [movieId, tvId]);
 
     return (
         <Carousel

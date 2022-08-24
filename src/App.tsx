@@ -13,6 +13,7 @@ import Movie from './components/Movie/Movie';
 import People from './components/People/People';
 import Person from './components/Person/Person';
 import Account from './components/Account/Account';
+import Show from './components/Show/Show';
 
 function App() {
     const darkTheme = createTheme({
@@ -37,6 +38,7 @@ function App() {
                             <Route path="/signup" element={<SignUp />} />
                             <Route path="/account" element={<Account />} />
                             <Route path="/movie/:movieId" element={<Movie />} />
+                            <Route path="/tv/:tvId" element={<Show />} />
                             <Route path="/people" element={<People />} />
                             <Route
                                 path="/people/person/:personId"

@@ -15,17 +15,11 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 function Account() {
     const { user } = useUserAuth();
     const [myLikes, setMyLikes] = useState<MovieInfoProps[]>([]);
-    const [myList, setMyList] = useState<MovieInfoProps[]>([]);
 
     useEffect(() => {
         onSnapshot(doc(db, 'users', `${user?.email}`), (doc) => {
-            console.log(doc.data()?.savedShows);
             if (doc.data()?.savedShows !== undefined) {
                 setMyLikes(doc.data()?.savedShows);
-            }
-
-            if (doc.data()?.myList !== undefined) {
-                setMyList(doc.data()?.myList);
             }
         });
     }, [user?.email]);
@@ -62,16 +56,6 @@ function Account() {
                     <Typography>User Collections</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                    <Typography variant="body1" component="p">
-                        My List
-                    </Typography>
-                    {myLikes.length > 0 ? (
-                        <Row movies={myList} />
-                    ) : (
-                        <Typography variant="body2" component="p">
-                            You don't have any added movies into your list.
-                        </Typography>
-                    )}
                     <Typography variant="body1" component="p">
                         My Likes
                     </Typography>

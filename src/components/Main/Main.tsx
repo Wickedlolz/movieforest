@@ -71,7 +71,7 @@ function Main() {
             <Typography variant="body1" component="p">
                 Shows On Air
             </Typography>
-            <ShowsRow showsOnAir={movies?.showsOnAir} />
+            <ShowsRow shows={movies?.showsOnAir} />
             <Typography variant="body1" component="p">
                 Now Playing
             </Typography>

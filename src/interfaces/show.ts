@@ -77,7 +77,7 @@ interface ISpokenLanguages {
     name: string;
 }
 
-interface IResults {
+interface IVideo {
     iso_639_1: string;
     iso_3166_1: string;
     name: string;
@@ -90,12 +90,8 @@ interface IResults {
     id: string;
 }
 
-interface IVideos {
-    results: IResults;
-}
-
 export interface IDetailedShow {
-    adult: boolean;
+    adult: boolean | undefined;
     backdrop_path: string;
     created_by: ICreatedBy[];
     episode_run_time: number[];
@@ -127,5 +123,5 @@ export interface IDetailedShow {
     type: string;
     vote_average: number;
     vote_count: number;
-    videos: IVideos[];
+    videos: IVideo;
 }
