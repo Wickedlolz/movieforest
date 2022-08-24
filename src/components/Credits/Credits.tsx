@@ -1,5 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
+import { movieState } from '../../atoms/movieAtom';
+import { showState } from '../../atoms/showAtom';
 import { request, endpoints } from '../../services/api';
 import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
@@ -16,45 +19,31 @@ interface CreditsProps {
     tvId?: string | undefined;
 }
 
-interface ActorsCredits {
-    adult: boolean;
-    gender: number | null;
-    id: number;
-    known_for_department: string;
-    name: string;
-    original_name: string;
-    popularity: number;
-    profile_path: string | null;
-    cast_id: number;
-    character: string;
-    credit_id: string;
-    order: number;
-}
-
 function Credits({ movieId, tvId }: CreditsProps) {
-    const [credits, setCredits] = useState<ActorsCredits[] | null>(null);
+    const [movie, setMovie] = useRecoilState(movieState);
+    const [show, setShow] = useRecoilState(showState);
 
     useEffect(() => {
-        if (movieId) {
+        if (movieId && movieId !== movie.info?.id.toString()) {
             request(endpoints.GET_MOVIE_CREDITS(movieId!))
                 .then((result) => {
-                    setCredits(result.cast);
+                    setMovie((state) => ({ ...state, credits: result.cast }));
                 })
                 .catch((error: any) => {
                     console.log(error.message);
                 });
         }
 
-        if (tvId) {
+        if (tvId && tvId !== show.info?.id.toString()) {
             request(endpoints.GET_SHOW_CREDITS(tvId))
                 .then((result) => {
-                    setCredits(result.cast);
+                    setShow((state) => ({ ...state, credits: result.cast }));
                 })
                 .catch((error: any) => {
                     console.log(error.message);
                 });
         }
-    }, [movieId, tvId]);
+    }, [movieId, tvId, movie.info?.id, show.info?.id, setMovie, setShow]);
 
     return (
         <Carousel
@@ -105,10 +94,10 @@ function Credits({ movieId, tvId }: CreditsProps) {
             slidesToSlide={1}
             swipeable
         >
-            {!credits ? (
+            {(movieId ? !movie.credits : !show.credits) ? (
                 <Spinner />
             ) : (
-                credits.map((x) => (
+                (movieId! ? movie.credits! : show.credits!).map((x) => (
                     <Grid container spacing={1} key={x.id}>
                         <Grid item xs={11}>
                             <Card
