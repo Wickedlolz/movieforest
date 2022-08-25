@@ -1,6 +1,9 @@
-import React from 'react';
+import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useUserAuth } from '../../contexts/AuthContext';
+import { useRecoilState } from 'recoil';
+import { themeState } from '../../atoms/themeAtom';
+
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -10,11 +13,17 @@ import IconButton from '@mui/material/IconButton';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
+import NightlightIcon from '@mui/icons-material/Nightlight';
+import WbSunnyIcon from '@mui/icons-material/WbSunny';
 
 function Header() {
     const { user, logout } = useUserAuth();
+    const [theme, setTheme] = useRecoilState(themeState);
     const navigate = useNavigate();
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+    const changeTheme = () =>
+        setTheme((state) => (state === 'light' ? 'dark' : 'light'));
 
     const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -49,6 +58,13 @@ function Header() {
                     </Typography>
                     {user ? (
                         <>
+                            <Button color="inherit" onClick={changeTheme}>
+                                {theme === 'light' ? (
+                                    <NightlightIcon />
+                                ) : (
+                                    <WbSunnyIcon />
+                                )}
+                            </Button>
                             <Button component={Link} to="/" color="inherit">
                                 Home
                             </Button>
