@@ -11,10 +11,10 @@ const root = ReactDOM.createRoot(
 );
 root.render(
     <React.StrictMode>
-        <RecoilRoot>
-            <BrowserRouter>
+        <BrowserRouter>
+            <RecoilRoot>
                 <App />
-            </BrowserRouter>
-        </RecoilRoot>
+            </RecoilRoot>
+        </BrowserRouter>
     </React.StrictMode>
 );
