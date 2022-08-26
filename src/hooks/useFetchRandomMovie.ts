@@ -2,11 +2,11 @@ import { useState, useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import { moviesState } from '../atoms/moviesAtom';
 import { endpoints, getAllMovies } from '../services/api';
-import { MovieProps } from '../interfaces/movie';
+import { IMovie } from '../interfaces/movie';
 
-const useFetchRandomMovie = (): MovieProps | null => {
+const useFetchRandomMovie = (): IMovie | null => {
     const movies = useRecoilValue(moviesState);
-    const [movie, setMovie] = useState<MovieProps | null>(null);
+    const [movie, setMovie] = useState<IMovie | null>(null);
 
     useEffect(() => {
         if (movies) {

@@ -1,4 +1,4 @@
-export interface MovieProps {
+export interface IMovie {
     title: string;
     backdrop_path: string;
     media_type?: string;
@@ -18,7 +18,7 @@ export interface MovieProps {
     episode_run_time?: number;
 }
 
-export interface MovieVideoProps {
+export interface IMovieVideo {
     iso_639_1: string;
     iso_3166_1: string;
     name: string;
@@ -31,7 +31,7 @@ export interface MovieVideoProps {
     id: string;
 }
 
-export interface MovieInfoProps {
+export interface IMovieInfo {
     adult: boolean;
     backdrop_path: string;
     belongs_to_collection: {};
@@ -63,7 +63,7 @@ export interface MovieInfoProps {
     name?: string;
 }
 
-export interface MovieReviewsProps {
+export interface IMovieReviews {
     author: string;
     author_details: {};
     name: string;

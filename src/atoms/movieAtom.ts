@@ -1,18 +1,18 @@
 import { atom } from 'recoil';
 import {
-    MovieInfoProps,
-    MovieVideoProps,
-    MovieReviewsProps,
-    MovieProps,
+    IMovieInfo,
+    IMovieVideo,
+    IMovieReviews,
+    IMovie,
 } from '../interfaces/movie';
-import { ActorsCredits } from '../interfaces/person';
+import { IActorsCredits } from '../interfaces/person';
 
 interface IMovieState {
-    info: MovieInfoProps | null;
-    video: MovieVideoProps | null;
-    reviews: MovieReviewsProps[] | null;
-    credits: ActorsCredits[] | null;
-    recommendations: MovieProps[] | [];
+    info: IMovieInfo | null;
+    video: IMovieVideo | null;
+    reviews: IMovieReviews[] | null;
+    credits: IActorsCredits[] | null;
+    recommendations: IMovie[] | [];
 }
 
 const initialState = {

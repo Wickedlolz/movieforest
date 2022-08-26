@@ -5,7 +5,7 @@ import { getMovieDetailedInfo, getMovieReviewsById } from '../../services/api';
 import ReactPlayer from 'react-player/lazy';
 import { db } from '../../firebase.config';
 import { doc, updateDoc, arrayUnion, onSnapshot } from 'firebase/firestore';
-import { MovieInfoProps } from '../../interfaces/movie';
+import { IMovieInfo } from '../../interfaces/movie';
 import { useRecoilState } from 'recoil';
 import { movieState } from '../../atoms/movieAtom';
 import { notificationAtom } from '../../atoms/notificationAtom';
@@ -34,7 +34,7 @@ function Movie() {
     const navigate = useNavigate();
     const { user } = useUserAuth();
     const [movie, setMovie] = useRecoilState(movieState);
-    const [savedMovies, setSavedMovies] = useState<MovieInfoProps[]>([]);
+    const [savedMovies, setSavedMovies] = useState<IMovieInfo[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isLiked, setIsLiked] = useState(false);
     const [isAddedToWatchlist, setIsAddedToWatchlist] = useState(false);

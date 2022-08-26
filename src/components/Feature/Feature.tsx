@@ -3,11 +3,11 @@ import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import { MovieProps } from '../../interfaces/movie';
+import { IMovie } from '../../interfaces/movie';
 import Button from '@mui/material/Button';
 
 interface MainFeaturedProps {
-    movie: MovieProps | null;
+    movie: IMovie | null;
 }
 
 function Feature({ movie }: MainFeaturedProps) {

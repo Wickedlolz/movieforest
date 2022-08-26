@@ -4,7 +4,7 @@ import useFetchRandomMovie from '../../hooks/useFetchRandomMovie';
 import { endpoints, requestByCategory } from '../../services/api';
 import { useRecoilState } from 'recoil';
 import { moviesState } from '../../atoms/moviesAtom';
-import { MovieInfoProps } from '../../interfaces/movie';
+import { IMovieInfo } from '../../interfaces/movie';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from '../../firebase.config';
 
@@ -18,7 +18,7 @@ function Main() {
     const randomMovie = useFetchRandomMovie();
     const { user } = useUserAuth();
     const [movies, setMovies] = useRecoilState(moviesState);
-    const [watchList, setWatchList] = useState<MovieInfoProps[]>([]);
+    const [watchList, setWatchList] = useState<IMovieInfo[]>([]);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {

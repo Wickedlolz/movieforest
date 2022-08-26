@@ -7,11 +7,11 @@ import CardActionArea from '@mui/material/CardActionArea';
 import Grid from '@mui/material/Grid';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
-import { MovieProps, MovieInfoProps } from '../../interfaces/movie';
+import { IMovie, IMovieInfo } from '../../interfaces/movie';
 import Spinner from '../common/Spinner';
 
 interface RowProps {
-    movies: MovieProps[] | MovieInfoProps[];
+    movies: IMovie[] | IMovieInfo[];
 }
 
 function Row({ movies }: RowProps) {

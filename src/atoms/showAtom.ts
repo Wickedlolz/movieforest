@@ -1,13 +1,13 @@
 import { atom } from 'recoil';
 import { IDetailedShow } from '../interfaces/show';
-import { MovieReviewsProps, MovieProps } from '../interfaces/movie';
-import { ActorsCredits } from '../interfaces/person';
+import { IMovieReviews, IMovie } from '../interfaces/movie';
+import { IActorsCredits } from '../interfaces/person';
 
-interface IShowState {
+interface IShow {
     info: IDetailedShow | null;
-    reviews: MovieReviewsProps[] | null;
-    credits: ActorsCredits[] | null;
-    recommendations: MovieProps[] | [];
+    reviews: IMovieReviews[] | null;
+    credits: IActorsCredits[] | null;
+    recommendations: IMovie[] | [];
 }
 
 const initialState = {
@@ -17,7 +17,7 @@ const initialState = {
     recommendations: [],
 };
 
-export const showState = atom<IShowState>({
+export const showState = atom<IShow>({
     key: 'showState',
     default: initialState,
 });

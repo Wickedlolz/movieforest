@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useUserAuth } from '../../contexts/AuthContext';
-import { MovieInfoProps } from '../../interfaces/movie';
+import { IMovieInfo } from '../../interfaces/movie';
 import { IShow } from '../../interfaces/show';
 
 import { doc, onSnapshot } from 'firebase/firestore';
@@ -16,7 +16,7 @@ import ShowsRow from '../ShowsRow/ShowsRow';
 
 function Account() {
     const { user } = useUserAuth();
-    const [myLikedMovies, setMyLikedMovies] = useState<MovieInfoProps[]>([]);
+    const [myLikedMovies, setMyLikedMovies] = useState<IMovieInfo[]>([]);
     const [myLikedShows, setMyLikedShows] = useState<IShow[]>([]);
 
     useEffect(() => {

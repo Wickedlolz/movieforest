@@ -1,10 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getPersonById, getPersonMovieCredits } from '../../services/api';
-import {
-    PersonStateProps,
-    PersonCastsStateProps,
-} from '../../interfaces/person';
+import { IPerson, IPersonCasts } from '../../interfaces/person';
 
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -18,10 +15,8 @@ import 'react-multi-carousel/lib/styles.css';
 
 function Person() {
     const { personId } = useParams();
-    const [person, setPerson] = useState<PersonStateProps | null>(null);
-    const [personCasts, setPersonCasts] = useState<
-        PersonCastsStateProps[] | null
-    >(null);
+    const [person, setPerson] = useState<IPerson | null>(null);
+    const [personCasts, setPersonCasts] = useState<IPersonCasts[] | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {

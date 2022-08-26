@@ -1,4 +1,4 @@
-export interface PersonStateProps {
+export interface IPerson {
     birthday: string | null;
     known_for_department: string;
     deathday: string | null;
@@ -18,7 +18,7 @@ export interface PersonStateProps {
     homepage: string | null;
 }
 
-export interface PersonCastsStateProps {
+export interface IPersonCasts {
     character: string;
     credit_id: string;
     release_date: string;
@@ -37,7 +37,7 @@ export interface PersonCastsStateProps {
     poster_path: string | null;
 }
 
-export interface ActorsCredits {
+export interface IActorsCredits {
     adult: boolean;
     gender: number | null;
     id: number;

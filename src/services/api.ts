@@ -1,5 +1,5 @@
-import { MovieProps } from '../interfaces/movie';
-import { PersonStateProps, PersonCastsStateProps } from '../interfaces/person';
+import { IMovie } from '../interfaces/movie';
+import { IPerson, IPersonCasts } from '../interfaces/person';
 
 const API_KEY: string = '356b2832036b27a06f949b42c2d89747';
 const baseUrl: string = `https://api.themoviedb.org/3`;
@@ -67,7 +67,7 @@ export async function requestByCategory(url: string): Promise<void> {
     }
 }
 
-export async function getAllMovies(url: string): Promise<MovieProps[] | any> {
+export async function getAllMovies(url: string): Promise<IMovie[] | any> {
     try {
         const response = await request(url);
         return response;
@@ -95,15 +95,13 @@ export async function getShowReviewsById(showId: string): Promise<any> {
     return request(endpoints.GET_SHOW_REVIEWS_BY_ID(showId));
 }
 
-export async function getPersonById(
-    personId: string
-): Promise<PersonStateProps> {
+export async function getPersonById(personId: string): Promise<IPerson> {
     return request(endpoints.GET_PERSON_BY_ID(personId));
 }
 
 export async function getPersonMovieCredits(
     personId: string
-): Promise<PersonCastsStateProps[]> {
+): Promise<IPersonCasts[]> {
     try {
         const result = await request(
             endpoints.GET_PERSON_MOVIE_CREDITS_BY_ID(personId)

@@ -1,6 +1,6 @@
 import { atom } from 'recoil';
 
-interface PeopleStateProps {
+interface IPeople {
     adult: boolean;
     gender: number;
     id: number;
@@ -11,7 +11,7 @@ interface PeopleStateProps {
     profile_path: string;
 }
 
-export const peopleState = atom<PeopleStateProps[] | null>({
+export const peopleState = atom<IPeople[] | null>({
     key: 'peopleState',
     default: null,
 });
