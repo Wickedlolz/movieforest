@@ -15,6 +15,7 @@ import People from './components/People/People';
 import Person from './components/Person/Person';
 import Account from './components/Account/Account';
 import Show from './components/Show/Show';
+import NotFound from './components/common/NotFound';
 
 function App() {
     const theme = useRecoilValue(themeState);
@@ -47,6 +48,7 @@ function App() {
                             path="/people/person/:personId"
                             element={<Person />}
                         />
+                        <Route path="/*" element={<NotFound />} />
                     </Routes>
                 </Container>
             </ThemeProvider>
