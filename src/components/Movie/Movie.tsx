@@ -6,7 +6,7 @@ import ReactPlayer from 'react-player/lazy';
 import { db } from '../../firebase.config';
 import { doc, updateDoc, arrayUnion, onSnapshot } from 'firebase/firestore';
 import { IMovieInfo } from '../../interfaces/movie';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { movieState } from '../../atoms/movieAtom';
 import { notificationAtom } from '../../atoms/notificationAtom';
 
@@ -24,8 +24,6 @@ import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlin
 import Credits from '../Credits/Credits';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import Review from '../Review/Review';
-import Snackbar from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
 import Tooltip from '@mui/material/Tooltip';
 import BookmarkAddedIcon from '@mui/icons-material/BookmarkAdded';
 
@@ -38,7 +36,7 @@ function Movie() {
     const [isLoading, setIsLoading] = useState(false);
     const [isLiked, setIsLiked] = useState(false);
     const [isAddedToWatchlist, setIsAddedToWatchlist] = useState(false);
-    const [notify, setNotify] = useRecoilState(notificationAtom);
+    const setNotify = useSetRecoilState(notificationAtom);
     const userRef = doc(db, 'users', `${user?.email}`);
 
     useEffect(() => {
@@ -143,17 +141,6 @@ function Movie() {
                 msg: `Something went wrong, try again later.`,
             }));
         }
-    };
-
-    const handleClose = (
-        event?: React.SyntheticEvent | Event,
-        reason?: string
-    ) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-
-        setNotify((state) => ({ ...state, show: false, msg: '' }));
     };
 
     const handleAddToWatchlist = async () => {
@@ -300,19 +287,6 @@ function Movie() {
                     />
                 </CardContent>
             </Card>
-            <Snackbar
-                open={notify.show}
-                autoHideDuration={6000}
-                onClose={handleClose}
-            >
-                <Alert
-                    onClose={handleClose}
-                    severity="success"
-                    sx={{ width: '100%' }}
-                >
-                    {notify.msg}
-                </Alert>
-            </Snackbar>
         </>
     );
 }

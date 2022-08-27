@@ -1,7 +1,9 @@
+import { SyntheticEvent } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { AuthContextProvider } from './contexts/AuthContext';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useRecoilState } from 'recoil';
 import { themeState } from './atoms/themeAtom';
+import { notificationAtom } from './atoms/notificationAtom';
 
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -16,9 +18,12 @@ import Person from './components/Person/Person';
 import Account from './components/Account/Account';
 import Show from './components/Show/Show';
 import NotFound from './components/common/NotFound';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 function App() {
     const theme = useRecoilValue(themeState);
+    const [notify, setNotify] = useRecoilState(notificationAtom);
 
     const lightTheme = createTheme();
     const darkTheme = createTheme({
@@ -29,6 +34,14 @@ function App() {
             },
         },
     });
+
+    const handleClose = (event?: SyntheticEvent | Event, reason?: string) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setNotify((state) => ({ ...state, show: false, msg: '' }));
+    };
 
     return (
         <AuthContextProvider>
@@ -50,6 +63,19 @@ function App() {
                         />
                         <Route path="/*" element={<NotFound />} />
                     </Routes>
+                    <Snackbar
+                        open={notify.show}
+                        autoHideDuration={6000}
+                        onClose={handleClose}
+                    >
+                        <Alert
+                            onClose={handleClose}
+                            severity="success"
+                            sx={{ width: '100%' }}
+                        >
+                            {notify.msg}
+                        </Alert>
+                    </Snackbar>
                 </Container>
             </ThemeProvider>
         </AuthContextProvider>

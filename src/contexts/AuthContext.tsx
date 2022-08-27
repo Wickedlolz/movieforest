@@ -110,8 +110,6 @@ export function AuthContextProvider({ children }: AuthProviderProps) {
             } else {
                 setUser(null);
                 setLoading(true);
-                //TODO: change to redirect to sign in
-                // navigate('/');
             }
         });
 
