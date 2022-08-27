@@ -66,6 +66,7 @@ function Movie() {
                     ...state,
                     show: true,
                     msg: error.message,
+                    type: 'error',
                 }));
                 navigate('/', { replace: true });
             }
@@ -109,12 +110,14 @@ function Movie() {
                 ...state,
                 show: true,
                 msg: `Successfully liked ${movie.info?.title}`,
+                type: 'success',
             }));
         } catch (error: any) {
             setNotify((state) => ({
                 ...state,
                 show: true,
                 msg: 'Something went wrong, try again later.',
+                type: 'error',
             }));
         }
     };
@@ -133,12 +136,14 @@ function Movie() {
                 ...state,
                 show: true,
                 msg: `Successfully unlike ${movie.info?.title}`,
+                type: 'success',
             }));
         } catch (error: any) {
             setNotify((state) => ({
                 ...state,
                 show: true,
                 msg: `Something went wrong, try again later.`,
+                type: 'error',
             }));
         }
     };

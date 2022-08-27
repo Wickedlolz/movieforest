@@ -1,6 +1,8 @@
 import { useUserAuth } from '../../contexts/AuthContext';
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import { useSetRecoilState } from 'recoil';
+import { notificationAtom } from '../../atoms/notificationAtom';
 
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -22,12 +24,18 @@ function SignUp() {
         handleSubmit,
         formState: { errors },
     } = useForm();
+    const setNotify = useSetRecoilState(notificationAtom);
 
     const handleSignUpSubmit = async (data: any) => {
         try {
             await signUp(data.email, data.password);
         } catch (error: any) {
-            alert(error.message);
+            setNotify((state) => ({
+                ...state,
+                show: true,
+                msg: error.message,
+                type: 'error',
+            }));
         }
     };
 

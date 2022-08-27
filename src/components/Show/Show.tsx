@@ -62,13 +62,18 @@ function Show() {
 
                 setIsLoading(false);
             } catch (error: any) {
-                console.log(error);
+                setNotify((state) => ({
+                    ...state,
+                    show: true,
+                    msg: error.message,
+                    type: 'error',
+                }));
                 navigate('/', { replace: true });
             }
         }
 
         fetchShowDetailedInfo();
-    }, [tvId, setShow, show.info?.id, navigate]);
+    }, [tvId, setShow, show.info?.id, navigate, setNotify]);
 
     useEffect(() => {
         onSnapshot(doc(db, 'users', `${user?.email}`), (doc) => {
@@ -105,12 +110,14 @@ function Show() {
                 ...state,
                 show: true,
                 msg: `Successfully liked ${show.info?.name}`,
+                type: 'success',
             }));
         } catch (error: any) {
             setNotify((state) => ({
                 ...state,
                 show: true,
                 msg: 'Something went wrong, try again later.',
+                type: 'error',
             }));
         }
     };
@@ -129,12 +136,14 @@ function Show() {
                 ...state,
                 show: true,
                 msg: `Successfully unlike ${show.info?.name}`,
+                type: 'success',
             }));
         } catch (error: any) {
             setNotify((state) => ({
                 ...state,
                 show: true,
                 msg: `Something went wrong, try again later.`,
+                type: 'error',
             }));
         }
     };
@@ -149,12 +158,14 @@ function Show() {
                 ...state,
                 show: true,
                 msg: `Successfully added ${show.info?.name} to my Watch List.`,
+                type: 'success',
             }));
         } catch (error: any) {
             setNotify((state) => ({
                 ...state,
                 show: true,
                 msg: 'Something went wrong, try again later.',
+                type: 'error',
             }));
         }
     };

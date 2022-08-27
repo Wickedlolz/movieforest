@@ -68,13 +68,23 @@ function App() {
                         autoHideDuration={6000}
                         onClose={handleClose}
                     >
-                        <Alert
-                            onClose={handleClose}
-                            severity="success"
-                            sx={{ width: '100%' }}
-                        >
-                            {notify.msg}
-                        </Alert>
+                        {notify.type === 'success' ? (
+                            <Alert
+                                onClose={handleClose}
+                                severity="success"
+                                sx={{ width: '100%' }}
+                            >
+                                {notify.msg}
+                            </Alert>
+                        ) : (
+                            <Alert
+                                onClose={handleClose}
+                                severity="error"
+                                sx={{ width: '100%' }}
+                            >
+                                {notify.msg}
+                            </Alert>
+                        )}
                     </Snackbar>
                 </Container>
             </ThemeProvider>
