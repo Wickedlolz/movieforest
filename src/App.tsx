@@ -20,6 +20,7 @@ import Show from './components/Show/Show';
 import NotFound from './components/common/NotFound';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
+import IsAuth from './components/common/IsAuth';
 
 function App() {
     const theme = useRecoilValue(themeState);
@@ -53,7 +54,6 @@ function App() {
                         <Route path="/" element={<Main />} />
                         <Route path="/signin" element={<SignIn />} />
                         <Route path="/signup" element={<SignUp />} />
-                        <Route path="/account" element={<Account />} />
                         <Route path="/movie/:movieId" element={<Movie />} />
                         <Route path="/tv/:tvId" element={<Show />} />
                         <Route path="/people" element={<People />} />
@@ -61,6 +61,9 @@ function App() {
                             path="/people/person/:personId"
                             element={<Person />}
                         />
+                        <Route element={<IsAuth />}>
+                            <Route path="/account" element={<Account />} />
+                        </Route>
                         <Route path="/*" element={<NotFound />} />
                     </Routes>
                     <Snackbar

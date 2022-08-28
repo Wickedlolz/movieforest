@@ -56,15 +56,15 @@ function Header() {
                             MovieForest
                         </Button>
                     </Typography>
+                    <Button color="inherit" onClick={changeTheme}>
+                        {theme === 'light' ? (
+                            <NightlightIcon />
+                        ) : (
+                            <WbSunnyIcon />
+                        )}
+                    </Button>
                     {user ? (
                         <>
-                            <Button color="inherit" onClick={changeTheme}>
-                                {theme === 'light' ? (
-                                    <NightlightIcon />
-                                ) : (
-                                    <WbSunnyIcon />
-                                )}
-                            </Button>
                             <Button component={Link} to="/" color="inherit">
                                 Home
                             </Button>
