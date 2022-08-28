@@ -117,15 +117,6 @@ function SignIn() {
                         Sign In
                     </Button>
                     <Grid container>
-                        <Grid item xs>
-                            <MuiLink
-                                component={Link}
-                                to="/reset-password"
-                                variant="body2"
-                            >
-                                Forgot password?
-                            </MuiLink>
-                        </Grid>
                         <Grid item>
                             <MuiLink
                                 component={Link}
