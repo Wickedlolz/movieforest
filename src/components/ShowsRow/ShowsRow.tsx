@@ -80,7 +80,7 @@ function ShowsRow({ shows }: ShowRowProps) {
                                     <CardMedia
                                         component="img"
                                         height="140"
-                                        image={`https://image.tmdb.org/t/p/original/${
+                                        image={`https://image.tmdb.org/t/p/original${
                                             x?.backdrop_path || x?.poster_path
                                         }`}
                                         alt="movie poster"

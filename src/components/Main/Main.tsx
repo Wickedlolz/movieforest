@@ -31,7 +31,7 @@ function Main() {
                     requestByCategory(endpoints.NOW_PLAYING),
                     requestByCategory(endpoints.POPULAR),
                     requestByCategory(endpoints.TOP_RATED),
-                    requestByCategory(endpoints.UPCOMING),
+                    requestByCategory(endpoints.UPCOMING()),
                     requestByCategory(endpoints.GET_SHOWS_ON_AIR),
                 ]);
 

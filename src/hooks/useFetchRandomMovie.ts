@@ -18,7 +18,7 @@ const useFetchRandomMovie = (): IMovie | null => {
             return;
         }
 
-        getAllMovies(endpoints.UPCOMING)
+        getAllMovies(endpoints.UPCOMING())
             .then((result) => {
                 setMovie(
                     result.results[

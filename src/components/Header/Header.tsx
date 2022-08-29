@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, MouseEvent } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useUserAuth } from '../../contexts/AuthContext';
 import { useRecoilState } from 'recoil';
@@ -25,7 +25,7 @@ function Header() {
     const changeTheme = () =>
         setTheme((state) => (state === 'light' ? 'dark' : 'light'));
 
-    const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
+    const handleMenu = (event: MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
 
@@ -65,8 +65,15 @@ function Header() {
                     </Button>
                     {user ? (
                         <>
-                            <Button component={Link} to="/" color="inherit">
-                                Home
+                            <Button
+                                component={Link}
+                                to="/movies"
+                                color="inherit"
+                            >
+                                Movies
+                            </Button>
+                            <Button component={Link} to="/tv" color="inherit">
+                                TV
                             </Button>
                             <Button
                                 component={Link}

@@ -5,7 +5,10 @@ const API_KEY: string = '356b2832036b27a06f949b42c2d89747';
 const baseUrl: string = `https://api.themoviedb.org/3`;
 
 export const endpoints = {
-    UPCOMING: `/movie/upcoming?api_key=${API_KEY}&language=en-US&page=1`,
+    UPCOMING: (page?: number) =>
+        `/movie/upcoming?api_key=${API_KEY}&language=en-US&page=${
+            page === undefined ? 1 : page
+        }`,
     TOP_RATED: `/movie/top_rated?api_key=${API_KEY}&language=en-US&page=1`,
     POPULAR: `/movie/popular?api_key=${API_KEY}&language=en-US&page=2`,
     NOW_PLAYING: `/movie/now_playing?api_key=${API_KEY}&language=en-US&page=1`,
@@ -51,17 +54,11 @@ export async function request(url: string): Promise<any> {
     }
 }
 
-export async function requestByCategory(url: string): Promise<void> {
+export async function requestByCategory(url: string): Promise<IMovie[]> {
     try {
-        const response = await fetch(baseUrl + url);
+        const response = await request(url);
 
-        if (response.ok === false) {
-            throw new Error(response.statusText);
-        }
-
-        const result = await response.json();
-
-        return result.results;
+        return response.results;
     } catch (error: any) {
         throw error;
     }
