@@ -28,9 +28,9 @@ function Main() {
             setLoading(true);
             const [nowPlaying, popular, topRated, upcoming, shows] =
                 await Promise.all([
-                    requestByCategory(endpoints.NOW_PLAYING),
-                    requestByCategory(endpoints.POPULAR),
-                    requestByCategory(endpoints.TOP_RATED),
+                    requestByCategory(endpoints.NOW_PLAYING()),
+                    requestByCategory(endpoints.POPULAR()),
+                    requestByCategory(endpoints.TOP_RATED()),
                     requestByCategory(endpoints.UPCOMING()),
                     requestByCategory(endpoints.GET_SHOWS_ON_AIR),
                 ]);

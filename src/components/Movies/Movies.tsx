@@ -1,4 +1,4 @@
-import { useEffect, useState, ChangeEvent } from 'react';
+import { useEffect, useState, ChangeEvent, useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { requestByCategory, endpoints } from '../../services/api';
 import { useSetRecoilState } from 'recoil';
@@ -30,18 +30,23 @@ function Movies() {
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         setSelectedCategory(event.target.value);
+        setCurrentPage(1);
+        setMovies([]);
     };
 
     const handleChangePage = () => setCurrentPage(currentPage + 1);
 
-    useEffect(() => {
-        const requests: any = {
+    const requests: any = useMemo(
+        () => ({
             upcoming: endpoints.UPCOMING(currentPage),
-            nowPlaying: endpoints.NOW_PLAYING,
-            topRated: endpoints.TOP_RATED,
-            popular: endpoints.POPULAR,
-        };
+            nowPlaying: endpoints.NOW_PLAYING(currentPage),
+            topRated: endpoints.TOP_RATED(currentPage),
+            popular: endpoints.POPULAR(currentPage),
+        }),
+        [currentPage]
+    );
 
+    useEffect(() => {
         if (currentPage === 1) {
             setIsLoading(true);
         }
@@ -49,6 +54,7 @@ function Movies() {
         requestByCategory(requests[selectedCategory])
             .then((result: IMovie[]) => {
                 setMovies((state) => [...state, ...result]);
+
                 if (currentPage === 1) {
                     setIsLoading(false);
                 }
@@ -62,7 +68,7 @@ function Movies() {
                 }));
                 navigate('/');
             });
-    }, [selectedCategory, currentPage, navigate, setNotify]);
+    }, [selectedCategory, currentPage, navigate, setNotify, requests]);
 
     return (
         <div>

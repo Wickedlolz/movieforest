@@ -9,9 +9,18 @@ export const endpoints = {
         `/movie/upcoming?api_key=${API_KEY}&language=en-US&page=${
             page === undefined ? 1 : page
         }`,
-    TOP_RATED: `/movie/top_rated?api_key=${API_KEY}&language=en-US&page=1`,
-    POPULAR: `/movie/popular?api_key=${API_KEY}&language=en-US&page=2`,
-    NOW_PLAYING: `/movie/now_playing?api_key=${API_KEY}&language=en-US&page=1`,
+    TOP_RATED: (page?: number) =>
+        `/movie/top_rated?api_key=${API_KEY}&language=en-US&page=${
+            page === undefined ? 1 : page
+        }`,
+    POPULAR: (page?: number) =>
+        `/movie/popular?api_key=${API_KEY}&language=en-US&page=${
+            page === undefined ? 1 : page
+        }`,
+    NOW_PLAYING: (page?: number) =>
+        `/movie/now_playing?api_key=${API_KEY}&language=en-US&page=${
+            page === undefined ? 1 : page
+        }`,
     GET_DETAILS_BY_ID: (movieId: string) =>
         `/movie/${movieId}?api_key=${API_KEY}&language=en-US`,
     GET_VIDEOS_BY_ID: (movieId: string) =>
