@@ -1,4 +1,4 @@
-import { useEffect, useState, ChangeEvent, useMemo } from 'react';
+import { useEffect, useState, ChangeEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { requestByCategory, endpoints } from '../../services/api';
 import { useSetRecoilState } from 'recoil';
@@ -36,27 +36,25 @@ function Movies() {
 
     const handleChangePage = () => setCurrentPage(currentPage + 1);
 
-    const requests: any = useMemo(
-        () => ({
-            upcoming: endpoints.UPCOMING(currentPage),
-            nowPlaying: endpoints.NOW_PLAYING(currentPage),
-            topRated: endpoints.TOP_RATED(currentPage),
-            popular: endpoints.POPULAR(currentPage),
-        }),
-        [currentPage]
-    );
-
     useEffect(() => {
         if (currentPage === 1) {
             setIsLoading(true);
         }
 
+        const requests: any = {
+            upcoming: endpoints.UPCOMING(currentPage),
+            nowPlaying: endpoints.NOW_PLAYING(currentPage),
+            topRated: endpoints.TOP_RATED(currentPage),
+            popular: endpoints.POPULAR(currentPage),
+        };
+
         requestByCategory(requests[selectedCategory])
             .then((result: IMovie[]) => {
-                setMovies((state) => [...state, ...result]);
-
                 if (currentPage === 1) {
+                    setMovies(result);
                     setIsLoading(false);
+                } else {
+                    setMovies((state) => [...state, ...result]);
                 }
             })
             .catch((error: any) => {
@@ -68,10 +66,10 @@ function Movies() {
                 }));
                 navigate('/');
             });
-    }, [selectedCategory, currentPage, navigate, setNotify, requests]);
+    }, [selectedCategory, currentPage, navigate, setNotify]);
 
     return (
-        <div>
+        <>
             <FormControl style={{ paddingBottom: '10px' }}>
                 <RadioGroup
                     row
@@ -139,12 +137,12 @@ function Movies() {
                         </Grid>
                     ))}
             </Grid>
-            <Box textAlign="center" style={{ paddingTop: '20px' }}>
+            <Box textAlign="center" style={{ paddingTop: '15px' }}>
                 <Button variant="contained" onClick={handleChangePage}>
                     Load more
                 </Button>
             </Box>
-        </div>
+        </>
     );
 }
 
