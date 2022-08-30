@@ -22,6 +22,7 @@ import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import IsAuth from './components/common/IsAuth';
 import Movies from './components/Movies/Movies';
+import TvShows from './components/TvShows/TvShows';
 
 function App() {
     const theme = useRecoilValue(themeState);
@@ -55,10 +56,11 @@ function App() {
                         <Route path="/" element={<Main />} />
                         <Route path="/signin" element={<SignIn />} />
                         <Route path="/signup" element={<SignUp />} />
+                        <Route path="/movies" element={<Movies />} />
                         <Route path="/movie/:movieId" element={<Movie />} />
+                        <Route path="/tv" element={<TvShows />} />
                         <Route path="/tv/:tvId" element={<Show />} />
                         <Route path="/people" element={<People />} />
-                        <Route path="/movies" element={<Movies />} />
                         <Route
                             path="/people/person/:personId"
                             element={<Person />}

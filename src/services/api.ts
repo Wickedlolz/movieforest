@@ -45,6 +45,22 @@ export const endpoints = {
         `/tv/${showId}/reviews?api_key=${API_KEY}&language=en-US&page=1`,
     GET_SHOW_RECOMENDATIONS_BY_ID: (showId: string) =>
         `/tv/${showId}/recommendations?api_key=${API_KEY}&language=en-US&page=1`,
+    TV_AIRING_TODAY: (page?: number) =>
+        `/tv/airing_today?api_key=${API_KEY}&language=en-US&page=${
+            page === undefined ? 1 : page
+        }`,
+    TV_ON_THE_AIR: (page?: number) =>
+        `/tv/on_the_air?api_key=${API_KEY}&language=en-US&page=${
+            page === undefined ? 1 : page
+        }`,
+    TV_POPULAR: (page?: number) =>
+        `/tv/popular?api_key=${API_KEY}&language=en-US&page=${
+            page === undefined ? 1 : page
+        }`,
+    TV_TOP_RATED: (page?: number) =>
+        `/tv/top_rated?api_key=${API_KEY}&language=en-US&page=${
+            page === undefined ? 1 : page
+        }`,
 };
 
 export async function request(url: string): Promise<any> {
