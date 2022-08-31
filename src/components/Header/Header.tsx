@@ -15,22 +15,32 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import NightlightIcon from '@mui/icons-material/Nightlight';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
+import MenuIcon from '@mui/icons-material/Menu';
 
 function Header() {
     const { user, logout } = useUserAuth();
     const [theme, setTheme] = useRecoilState(themeState);
     const navigate = useNavigate();
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const [userAnchorEl, setUserAnchorEl] = useState<null | HTMLElement>(null);
+    const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
 
     const changeTheme = () =>
         setTheme((state) => (state === 'light' ? 'dark' : 'light'));
 
-    const handleMenu = (event: MouseEvent<HTMLElement>) => {
-        setAnchorEl(event.currentTarget);
+    const handleUserMenu = (event: MouseEvent<HTMLElement>) => {
+        setUserAnchorEl(event.currentTarget);
     };
 
-    const handleClose = () => {
-        setAnchorEl(null);
+    const handleUserMenuClose = () => {
+        setUserAnchorEl(null);
+    };
+
+    const handleMenu = (event: MouseEvent<HTMLElement>) => {
+        setMenuAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = () => {
+        setMenuAnchorEl(null);
     };
 
     const handleSignOutClick = async (event: React.FormEvent) => {
@@ -63,82 +73,137 @@ function Header() {
                             <WbSunnyIcon />
                         )}
                     </Button>
-                    {user ? (
-                        <>
-                            <Button
+                    <div>
+                        <IconButton
+                            size="large"
+                            aria-label="account of current user"
+                            aria-controls="menu-appbar"
+                            aria-haspopup="true"
+                            onClick={handleMenu}
+                            color="inherit"
+                        >
+                            <MenuIcon />
+                        </IconButton>
+                        <Menu
+                            id="menu-appbar"
+                            anchorEl={menuAnchorEl}
+                            anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            keepMounted
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            open={Boolean(menuAnchorEl)}
+                            onClose={handleMenuClose}
+                        >
+                            <MenuItem
                                 component={Link}
                                 to="/movies"
-                                color="inherit"
+                                onClick={handleMenuClose}
                             >
                                 Movies
-                            </Button>
-                            <Button component={Link} to="/tv" color="inherit">
+                            </MenuItem>
+                            <MenuItem
+                                component={Link}
+                                to="/tv"
+                                onClick={handleMenuClose}
+                            >
                                 TV
-                            </Button>
-                            <Button
+                            </MenuItem>
+                            <MenuItem
                                 component={Link}
                                 to="/people"
-                                color="inherit"
+                                onClick={handleMenuClose}
                             >
                                 People
-                            </Button>
-                            <div>
-                                <IconButton
-                                    size="large"
-                                    aria-label="account of current user"
-                                    aria-controls="menu-appbar"
-                                    aria-haspopup="true"
-                                    onClick={handleMenu}
-                                    color="inherit"
+                            </MenuItem>
+                        </Menu>
+                    </div>
+                    {user ? (
+                        <div>
+                            <IconButton
+                                size="large"
+                                aria-label="account of current user"
+                                aria-controls="menu-appbar"
+                                aria-haspopup="true"
+                                onClick={handleUserMenu}
+                                color="inherit"
+                            >
+                                <AccountCircle />
+                            </IconButton>
+                            <Menu
+                                id="menu-appbar"
+                                anchorEl={userAnchorEl}
+                                anchorOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                keepMounted
+                                transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                open={Boolean(userAnchorEl)}
+                                onClose={handleUserMenuClose}
+                            >
+                                <MenuItem
+                                    component={Link}
+                                    to="/account"
+                                    onClick={handleUserMenuClose}
                                 >
-                                    <AccountCircle />
-                                </IconButton>
-                                <Menu
-                                    id="menu-appbar"
-                                    anchorEl={anchorEl}
-                                    anchorOrigin={{
-                                        vertical: 'top',
-                                        horizontal: 'right',
-                                    }}
-                                    keepMounted
-                                    transformOrigin={{
-                                        vertical: 'top',
-                                        horizontal: 'right',
-                                    }}
-                                    open={Boolean(anchorEl)}
-                                    onClose={handleClose}
-                                >
-                                    <MenuItem
-                                        component={Link}
-                                        to="/account"
-                                        onClick={handleClose}
-                                    >
-                                        My account
-                                    </MenuItem>
-                                    <MenuItem onClick={handleSignOutClick}>
-                                        Sign Out
-                                    </MenuItem>
-                                </Menu>
-                            </div>
-                        </>
+                                    My account
+                                </MenuItem>
+                                <MenuItem onClick={handleSignOutClick}>
+                                    Sign Out
+                                </MenuItem>
+                            </Menu>
+                        </div>
                     ) : (
-                        <>
-                            <Button
-                                component={Link}
-                                to="/signin"
+                        <div>
+                            <IconButton
+                                size="large"
+                                aria-label="account of current user"
+                                aria-controls="menu-appbar"
+                                aria-haspopup="true"
+                                onClick={handleUserMenu}
                                 color="inherit"
                             >
-                                Sign In
-                            </Button>
-
-                            <Button
-                                component={Link}
-                                to="/signup"
-                                color="inherit"
+                                <AccountCircle />
+                            </IconButton>
+                            <Menu
+                                id="menu-appbar"
+                                anchorEl={userAnchorEl}
+                                anchorOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                keepMounted
+                                transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                open={Boolean(userAnchorEl)}
+                                onClose={handleUserMenuClose}
                             >
-                                Sign Up
-                            </Button>
-                        </>
+                                <MenuItem
+                                    component={Link}
+                                    to="/signin"
+                                    onClick={handleUserMenuClose}
+                                >
+                                    Sign In
+                                </MenuItem>
+                                <MenuItem
+                                    component={Link}
+                                    to="/signup"
+                                    onClick={handleUserMenuClose}
+                                >
+                                    Sign Up
+                                </MenuItem>
+                            </Menu>
+                        </div>
                     )}
                 </Toolbar>
             </AppBar>
