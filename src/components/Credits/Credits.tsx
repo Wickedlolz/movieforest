@@ -3,7 +3,9 @@ import { Link } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { movieState } from '../../atoms/movieAtom';
 import { showState } from '../../atoms/showAtom';
-import { request, endpoints } from '../../services/api';
+import * as movieService from '../../services/movie';
+import * as showService from '../../services/show';
+
 import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -25,23 +27,21 @@ function Credits({ movieId, tvId }: CreditsProps) {
 
     useEffect(() => {
         if (movieId && movieId !== movie.info?.id.toString()) {
-            request(endpoints.GET_MOVIE_CREDITS(movieId!))
+            movieService
+                .getMovieCreditsById(movieId!)
                 .then((result) => {
-                    setMovie((state) => ({ ...state, credits: result.cast }));
+                    setMovie((state) => ({ ...state, credits: result }));
                 })
-                .catch((error: any) => {
-                    console.log(error.message);
-                });
+                .catch((error: any) => console.log(error));
         }
 
         if (tvId && tvId !== show.info?.id.toString()) {
-            request(endpoints.GET_SHOW_CREDITS(tvId))
+            showService
+                .getShowCreditsById(tvId!)
                 .then((result) => {
-                    setShow((state) => ({ ...state, credits: result.cast }));
+                    setShow((state) => ({ ...state, credits: result }));
                 })
-                .catch((error: any) => {
-                    console.log(error.message);
-                });
+                .catch((error: any) => console.log(error));
         }
     }, [movieId, tvId, movie.info?.id, show.info?.id, setMovie, setShow]);
 

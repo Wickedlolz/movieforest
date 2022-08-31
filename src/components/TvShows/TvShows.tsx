@@ -2,7 +2,7 @@ import { useState, useEffect, ChangeEvent } from 'react';
 import { useSetRecoilState } from 'recoil';
 import { notificationAtom } from '../../atoms/notificationAtom';
 import { useNavigate, Link } from 'react-router-dom';
-import { requestByCategory, endpoints } from '../../services/api';
+import * as showService from '../../services/show';
 import { IShow } from '../../interfaces/show';
 import { IError } from '../../interfaces/error';
 
@@ -42,14 +42,8 @@ function TvShows() {
             setIsLoading(true);
         }
 
-        const requests: any = {
-            airingToday: endpoints.TV_AIRING_TODAY(currentPage),
-            onTheAir: endpoints.TV_ON_THE_AIR(currentPage),
-            topRated: endpoints.TV_TOP_RATED(currentPage),
-            popular: endpoints.TV_POPULAR(currentPage),
-        };
-
-        requestByCategory(requests[selectedCategory])
+        showService
+            .getByCategory(selectedCategory, currentPage)
             .then((result: IShow[]) => {
                 if (currentPage === 1) {
                     setShows(result);

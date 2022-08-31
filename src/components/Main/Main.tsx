@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useUserAuth } from '../../contexts/AuthContext';
 import useFetchRandomMovie from '../../hooks/useFetchRandomMovie';
-import { endpoints, requestByCategory } from '../../services/api';
+import * as movieService from '../../services/movie';
+import * as showService from '../../services/show';
 import { useRecoilState } from 'recoil';
 import { moviesState } from '../../atoms/moviesAtom';
 import { IMovieInfo } from '../../interfaces/movie';
@@ -28,11 +29,11 @@ function Main() {
             setLoading(true);
             const [nowPlaying, popular, topRated, upcoming, shows] =
                 await Promise.all([
-                    requestByCategory(endpoints.NOW_PLAYING()),
-                    requestByCategory(endpoints.POPULAR()),
-                    requestByCategory(endpoints.TOP_RATED()),
-                    requestByCategory(endpoints.UPCOMING()),
-                    requestByCategory(endpoints.GET_SHOWS_ON_AIR),
+                    movieService.getNowPlayingMovies(),
+                    movieService.getPopularMovies(),
+                    movieService.getTopRatedMovies(),
+                    movieService.getUpcomingMovies(),
+                    showService.getOnTheAirShows(),
                 ]);
 
             setMovies({

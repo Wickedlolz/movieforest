@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { peopleState } from '../../atoms/peopleAtom';
 import { Link } from 'react-router-dom';
-import { request, endpoints } from '../../services/api';
+import * as personService from '../../services/person';
 
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -19,12 +19,13 @@ function People() {
     useEffect(() => {
         if (people) return;
         setIsLoading(true);
-        request(endpoints.POPULAR_ACTORS)
-            .then((result: any) => {
-                setPeople(result.results);
+        personService
+            .getPopularActors()
+            .then((result) => {
+                setPeople(result);
                 setIsLoading(false);
             })
-            .catch((error: any) => console.log(error.message));
+            .catch((error: any) => console.log(error));
     }, [people, setPeople]);
 
     if (isLoading) {

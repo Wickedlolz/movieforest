@@ -1,6 +1,6 @@
 import { useEffect, useState, ChangeEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { requestByCategory, endpoints } from '../../services/api';
+import * as movieService from '../../services/movie';
 import { useSetRecoilState } from 'recoil';
 import { notificationAtom } from '../../atoms/notificationAtom';
 import { IMovie } from '../../interfaces/movie';
@@ -41,14 +41,8 @@ function Movies() {
             setIsLoading(true);
         }
 
-        const requests: any = {
-            upcoming: endpoints.UPCOMING(currentPage),
-            nowPlaying: endpoints.NOW_PLAYING(currentPage),
-            topRated: endpoints.TOP_RATED(currentPage),
-            popular: endpoints.POPULAR(currentPage),
-        };
-
-        requestByCategory(requests[selectedCategory])
+        movieService
+            .getByCategory(selectedCategory, currentPage)
             .then((result: IMovie[]) => {
                 if (currentPage === 1) {
                     setMovies(result);

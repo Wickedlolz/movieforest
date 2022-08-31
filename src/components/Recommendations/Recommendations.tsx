@@ -2,7 +2,9 @@ import { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import { movieState } from '../../atoms/movieAtom';
 import { showState } from '../../atoms/showAtom';
-import { request, endpoints } from '../../services/api';
+import * as movieService from '../../services/movie';
+import * as showService from '../../services/show';
+
 import Typography from '@mui/material/Typography';
 import Row from '../Row/Row';
 
@@ -18,29 +20,24 @@ function Recommendations({ movieId, tvId, title }: RecommendationsProps) {
 
     useEffect(() => {
         if (movieId && movieId !== movie.info?.id.toString()) {
-            request(endpoints.GET_RECOMMENDATIONS_BY_ID(movieId!))
+            movieService
+                .getMovieRecommendationsById(movieId!)
                 .then((result) => {
                     setMovie((state) => ({
                         ...state,
-                        recommendations: result.results,
+                        recommendations: result,
                     }));
                 })
-                .catch((error: any) => {
-                    console.log(error.message);
-                });
+                .catch((error: any) => console.log(error));
         }
 
         if (tvId && tvId !== show.info?.id.toString()) {
-            request(endpoints.GET_SHOW_RECOMENDATIONS_BY_ID(tvId!))
+            showService
+                .getShowRecommendationsById(tvId!)
                 .then((result) => {
-                    setShow((state) => ({
-                        ...state,
-                        recommendations: result.results,
-                    }));
+                    setShow((state) => ({ ...state, recommendations: result }));
                 })
-                .catch((error: any) => {
-                    console.log(error.message);
-                });
+                .catch((error: any) => console.log(error));
         }
     }, [movieId, tvId, movie.info?.id, show.info?.id, setMovie, setShow]);
 

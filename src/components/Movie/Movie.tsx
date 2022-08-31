@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useUserAuth } from '../../contexts/AuthContext';
-import { getMovieDetailedInfo, getMovieReviewsById } from '../../services/api';
+import * as movieService from '../../services/movie';
 import ReactPlayer from 'react-player/lazy';
 import { db } from '../../firebase.config';
 import { doc, updateDoc, arrayUnion, onSnapshot } from 'firebase/firestore';
@@ -45,18 +45,18 @@ function Movie() {
 
         async function fetchMovieDetailedInfo(): Promise<void> {
             try {
-                const [movieInfo, movieVideos] = await getMovieDetailedInfo(
-                    movieId!
-                );
-                const movieReviewsResult = await getMovieReviewsById(movieId!);
+                const [movieInfo, movieVideos] =
+                    await movieService.getMovieDetailedInfo(movieId!);
+                const movieReviewsResult =
+                    await movieService.getMovieReviewsById(movieId!);
 
-                const index = movieVideos.results.findIndex(
+                const index = movieVideos.findIndex(
                     (element: any) => element.type === 'Trailer'
                 );
                 setMovie((state) => ({
                     ...state,
                     info: movieInfo,
-                    video: movieVideos.results[index],
+                    video: movieVideos[index],
                     reviews: movieReviewsResult.results,
                 }));
 

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import { moviesState } from '../atoms/moviesAtom';
-import { endpoints, getAllMovies } from '../services/api';
+import * as movieService from '../services/movie';
 import { IMovie } from '../interfaces/movie';
 
 const useFetchRandomMovie = (): IMovie | null => {
@@ -18,17 +18,12 @@ const useFetchRandomMovie = (): IMovie | null => {
             return;
         }
 
-        getAllMovies(endpoints.UPCOMING())
+        movieService
+            .getUpcomingMovies()
             .then((result) => {
-                setMovie(
-                    result.results[
-                        Math.floor(Math.random() * result.results.length)
-                    ]
-                );
+                setMovie(result[Math.floor(Math.random() * result.length)]);
             })
-            .catch((error: any) => {
-                console.log(error.message);
-            });
+            .catch((error: any) => console.log(error));
     }, [movies]);
 
     return movie;

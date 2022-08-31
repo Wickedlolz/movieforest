@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { getPersonById, getPersonMovieCredits } from '../../services/api';
+import * as personService from '../../services/person';
 import { IPerson, IPersonCasts } from '../../interfaces/person';
 
 import Card from '@mui/material/Card';
@@ -21,18 +21,20 @@ function Person() {
 
     useEffect(() => {
         setLoading(true);
-        getPersonById(personId!)
+        personService
+            .getPersonById(personId!)
             .then((result) => {
                 setPerson(result);
                 setLoading(false);
             })
-            .catch((error: any) => console.log(error.message));
+            .catch((error: any) => console.log(error));
     }, [personId]);
 
     useEffect(() => {
-        getPersonMovieCredits(personId!)
+        personService
+            .getPersonCastsById(personId!)
             .then((result) => setPersonCasts(result))
-            .catch((error: any) => console.log(error.message));
+            .catch((error: any) => console.log(error));
     }, [personId]);
 
     if (loading) {
