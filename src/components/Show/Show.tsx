@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useUserAuth } from '../../contexts/AuthContext';
-import { getTvShowById, getShowReviewsById } from '../../services/api';
+import * as showService from '../../services/show';
 import ReactPlayer from 'react-player/lazy';
 import { db } from '../../firebase.config';
 import { doc, updateDoc, arrayUnion, onSnapshot } from 'firebase/firestore';
@@ -44,8 +44,10 @@ function Show() {
         setIsLoading(true);
         async function fetchShowDetailedInfo() {
             try {
-                const showInfo = await getTvShowById(tvId!);
-                const showReviewsResult = await getShowReviewsById(tvId!);
+                const showInfo = await showService.getShowByIdWithVideos(tvId!);
+                const showReviewsResult = await showService.getShowsReviewsById(
+                    tvId!
+                );
 
                 const index = showInfo.videos.results.findIndex(
                     (element: any) => element.type === 'Trailer'
@@ -57,7 +59,7 @@ function Show() {
                         ...showInfo,
                         videos: showInfo.videos.results[index],
                     },
-                    reviews: showReviewsResult.results,
+                    reviews: showReviewsResult,
                 }));
 
                 setIsLoading(false);

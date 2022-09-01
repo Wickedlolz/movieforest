@@ -61,7 +61,9 @@ function Feature({ movie }: MainFeaturedProps) {
                             {movie?.title}
                         </Typography>
                         <Typography variant="h5" color="inherit" paragraph>
-                            {movie?.overview}
+                            {movie?.overview.length! > 175
+                                ? movie?.overview.substring(0, 175) + '...'
+                                : movie?.overview}
                         </Typography>
                         <Button
                             component={Link}
