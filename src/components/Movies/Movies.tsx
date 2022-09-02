@@ -110,6 +110,7 @@ function Movies() {
                                 <CardActionArea>
                                     <CardMedia
                                         component="img"
+                                        loading="lazy"
                                         height="140"
                                         image={`https://image.tmdb.org/t/p/original${
                                             movie.backdrop_path ||

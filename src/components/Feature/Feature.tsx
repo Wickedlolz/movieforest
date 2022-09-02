@@ -21,18 +21,11 @@ function Feature({ movie }: MainFeaturedProps) {
                 backgroundSize: 'cover',
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center',
-                backgroundImage: `url(https://image.tmdb.org/t/p/original/${
+                backgroundImage: `url(https://image.tmdb.org/t/p/original${
                     movie?.backdrop_path || movie?.poster_path
                 })`,
             }}
         >
-            {
-                <img
-                    style={{ display: 'none' }}
-                    src={movie?.backdrop_path}
-                    alt={movie?.name}
-                />
-            }
             <Box
                 sx={{
                     position: 'absolute',

@@ -79,6 +79,7 @@ function ShowsRow({ shows }: ShowRowProps) {
                                 <CardActionArea>
                                     <CardMedia
                                         component="img"
+                                        loading="lazy"
                                         height="140"
                                         image={`https://image.tmdb.org/t/p/original${
                                             x?.backdrop_path || x?.poster_path

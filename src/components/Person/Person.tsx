@@ -45,6 +45,7 @@ function Person() {
         <Card>
             <CardMedia
                 component="img"
+                loading="lazy"
                 height="640"
                 image={`https://image.tmdb.org/t/p/original/${person?.profile_path}`}
                 alt="actor"
