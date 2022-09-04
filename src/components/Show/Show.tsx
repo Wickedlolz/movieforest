@@ -262,7 +262,7 @@ function Show() {
                         Media
                     </Typography>
                     <ReactPlayer
-                        url={`https://www.youtube.com/watch?v=${show.info?.videos.key}`}
+                        url={`https://www.youtube.com/watch?v=${show.info?.videos?.key}`}
                         playing
                         width="100%"
                         controls

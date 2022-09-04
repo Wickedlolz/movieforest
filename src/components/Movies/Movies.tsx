@@ -34,7 +34,7 @@ function Movies() {
         setMovies([]);
     };
 
-    const handleChangePage = () => setCurrentPage(currentPage + 1);
+    const handleChangePage = () => setCurrentPage((state) => state + 1);
 
     useEffect(() => {
         if (currentPage === 1) {

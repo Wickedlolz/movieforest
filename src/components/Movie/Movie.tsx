@@ -158,12 +158,14 @@ function Movie() {
                 ...state,
                 show: true,
                 msg: `Successfully added ${movie.info?.title} to my Watch List.`,
+                type: 'success',
             }));
         } catch (error: any) {
             setNotify((state) => ({
                 ...state,
                 show: true,
                 msg: error.message,
+                type: 'error',
             }));
         }
     };
