@@ -1,5 +1,5 @@
 import request from './request';
-import { IMovie, IMovieInfo, IMovieVideo } from '../interfaces/movie';
+import { IMovie, IMovieInfo, IMovieVideo, ISearch } from '../interfaces/movie';
 
 const API_KEY: string = '356b2832036b27a06f949b42c2d89747';
 
@@ -30,6 +30,8 @@ const endpoints = {
         `/movie/${movieId}/credits?api_key=${API_KEY}&language=en-US`,
     GET_MOVIE_REVIEWS_BY_ID: (movieId: string) =>
         `/movie/${movieId}/reviews?api_key=${API_KEY}&language=en-US&page=1`,
+    SEARCH: (search: string) =>
+        `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${search}`,
 };
 
 export async function getMovieReviewsById(movieId: string): Promise<any> {
@@ -94,6 +96,13 @@ export async function getByCategory(
     };
 
     const result = await request(categories[category]);
+
+    return result.results;
+}
+
+export async function search(searchedMovie: string): Promise<ISearch[]> {
+    const search: string = encodeURI(searchedMovie);
+    const result = await request(endpoints.SEARCH(search));
 
     return result.results;
 }

@@ -16,6 +16,14 @@ import Menu from '@mui/material/Menu';
 import NightlightIcon from '@mui/icons-material/Nightlight';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import MenuIcon from '@mui/icons-material/Menu';
+import MovieIcon from '@mui/icons-material/Movie';
+import TheatersIcon from '@mui/icons-material/Theaters';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import SearchIcon from '@mui/icons-material/Search';
+import LogoutIcon from '@mui/icons-material/Logout';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import LoginIcon from '@mui/icons-material/Login';
+import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
 
 function Header() {
     const { user, logout } = useUserAuth();
@@ -101,9 +109,18 @@ function Header() {
                         >
                             <MenuItem
                                 component={Link}
+                                to="/search"
+                                onClick={handleMenuClose}
+                            >
+                                <SearchIcon />
+                                Search
+                            </MenuItem>
+                            <MenuItem
+                                component={Link}
                                 to="/movies"
                                 onClick={handleMenuClose}
                             >
+                                <MovieIcon />
                                 Movies
                             </MenuItem>
                             <MenuItem
@@ -111,6 +128,7 @@ function Header() {
                                 to="/tv"
                                 onClick={handleMenuClose}
                             >
+                                <TheatersIcon />
                                 TV
                             </MenuItem>
                             <MenuItem
@@ -118,6 +136,7 @@ function Header() {
                                 to="/people"
                                 onClick={handleMenuClose}
                             >
+                                <PeopleAltIcon />
                                 People
                             </MenuItem>
                         </Menu>
@@ -154,9 +173,11 @@ function Header() {
                                     to="/account"
                                     onClick={handleUserMenuClose}
                                 >
+                                    <AccountBoxIcon />
                                     My account
                                 </MenuItem>
                                 <MenuItem onClick={handleSignOutClick}>
+                                    <LogoutIcon />
                                     Sign Out
                                 </MenuItem>
                             </Menu>
@@ -193,6 +214,7 @@ function Header() {
                                     to="/signin"
                                     onClick={handleUserMenuClose}
                                 >
+                                    <LoginIcon />
                                     Sign In
                                 </MenuItem>
                                 <MenuItem
@@ -200,6 +222,7 @@ function Header() {
                                     to="/signup"
                                     onClick={handleUserMenuClose}
                                 >
+                                    <AppRegistrationIcon />
                                     Sign Up
                                 </MenuItem>
                             </Menu>

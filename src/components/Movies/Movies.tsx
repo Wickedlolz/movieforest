@@ -67,7 +67,7 @@ function Movies() {
             <FormControl style={{ paddingBottom: '10px' }}>
                 <RadioGroup
                     row
-                    aria-labelledby="demo-row-radio-buttons-group-label"
+                    aria-labelledby="select-category"
                     name="row-radio-buttons-group"
                     onChange={handleChange}
                 >
