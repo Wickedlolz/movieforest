@@ -109,7 +109,7 @@ function Credits({ movieId, tvId }: CreditsProps) {
                                     <CardMedia
                                         component="img"
                                         height="140"
-                                        image={`https://image.tmdb.org/t/p/original/${x?.profile_path}`}
+                                        image={`https://image.tmdb.org/t/p/w500/${x?.profile_path}`}
                                         alt="actor image"
                                     />
                                     <CardContent>

@@ -84,7 +84,7 @@ function Row({ movies }: RowProps) {
                                         component="img"
                                         loading="lazy"
                                         height="140"
-                                        image={`https://image.tmdb.org/t/p/original${
+                                        image={`https://image.tmdb.org/t/p/w500${
                                             x?.backdrop_path || x?.poster_path
                                         }`}
                                         alt="movie poster"

@@ -31,7 +31,7 @@ const endpoints = {
     GET_MOVIE_REVIEWS_BY_ID: (movieId: string) =>
         `/movie/${movieId}/reviews?api_key=${API_KEY}&language=en-US&page=1`,
     SEARCH: (search: string) =>
-        `https://api.themoviedb.org/3/search/movie?api_key=${API_KEY}&query=${search}`,
+        `/search/movie?api_key=${API_KEY}&query=${search}`,
 };
 
 export async function getMovieReviewsById(movieId: string): Promise<any> {

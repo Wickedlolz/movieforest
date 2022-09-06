@@ -23,6 +23,7 @@ import Alert from '@mui/material/Alert';
 import IsAuth from './components/common/IsAuth';
 import Movies from './components/Movies/Movies';
 import TvShows from './components/TvShows/TvShows';
+import Search from './components/Search/Search';
 
 function App() {
     const theme = useRecoilValue(themeState);
@@ -61,6 +62,7 @@ function App() {
                         <Route path="/tv" element={<TvShows />} />
                         <Route path="/tv/:tvId" element={<Show />} />
                         <Route path="/people" element={<People />} />
+                        <Route path="/search" element={<Search />} />
                         <Route
                             path="/people/person/:personId"
                             element={<Person />}

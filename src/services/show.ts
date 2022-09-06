@@ -1,6 +1,6 @@
 import request from './request';
 import { IShow } from '../interfaces/show';
-import { IMovieReviews } from '../interfaces/movie';
+import { IMovieReviews, ISearch } from '../interfaces/movie';
 
 const API_KEY: string = '356b2832036b27a06f949b42c2d89747';
 
@@ -29,6 +29,7 @@ const endpoints = {
         `/tv/top_rated?api_key=${API_KEY}&language=en-US&page=${
             page === undefined ? 1 : page
         }`,
+    SEARCH: (search: string) => `/search/tv?api_key=${API_KEY}&query=${search}`,
 };
 
 export async function getAiringTodayShows(page?: number): Promise<IShow[]> {
@@ -87,6 +88,13 @@ export async function getByCategory(
     };
 
     const result = await request(categories[category]);
+
+    return result.results;
+}
+
+export async function search(searchedShow: string): Promise<ISearch[]> {
+    const search: string = encodeURI(searchedShow);
+    const result = await request(endpoints.SEARCH(search));
 
     return result.results;
 }

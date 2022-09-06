@@ -113,7 +113,7 @@ function TvShows() {
                                         component="img"
                                         loading="lazy"
                                         height="140"
-                                        image={`https://image.tmdb.org/t/p/original${
+                                        image={`https://image.tmdb.org/t/p/w500${
                                             show.backdrop_path ||
                                             show.poster_path
                                         }`}
