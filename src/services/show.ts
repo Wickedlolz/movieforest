@@ -1,4 +1,4 @@
-import request from './request';
+import * as request from './request';
 import { IShow } from '../interfaces/show';
 import { IMovieReviews, ISearch } from '../interfaces/movie';
 
@@ -33,43 +33,43 @@ const endpoints = {
 };
 
 export async function getAiringTodayShows(page?: number): Promise<IShow[]> {
-    const result = await request(endpoints.TV_AIRING_TODAY(page));
+    const result = await request.get(endpoints.TV_AIRING_TODAY(page));
     return result.results;
 }
 
 export async function getOnTheAirShows(page?: number): Promise<IShow[]> {
-    const result = await request(endpoints.TV_ON_THE_AIR(page));
+    const result = await request.get(endpoints.TV_ON_THE_AIR(page));
     return result.results;
 }
 
 export async function getPopularShows(page?: number): Promise<IShow[]> {
-    const result = await request(endpoints.TV_POPULAR(page));
+    const result = await request.get(endpoints.TV_POPULAR(page));
     return result.results;
 }
 
 export async function getTopRatedShows(page?: number): Promise<IShow[]> {
-    const result = await request(endpoints.TV_TOP_RATED(page));
+    const result = await request.get(endpoints.TV_TOP_RATED(page));
     return result.results;
 }
 
 export async function getShowByIdWithVideos(id: string): Promise<any> {
-    return request(endpoints.GET_SHOW_BY_ID_WITH_VIDEOS(id));
+    return request.get(endpoints.GET_SHOW_BY_ID_WITH_VIDEOS(id));
 }
 
 export async function getShowsReviewsById(
     id: string
 ): Promise<IMovieReviews[]> {
-    const result = await request(endpoints.GET_SHOW_REVIEWS_BY_ID(id));
+    const result = await request.get(endpoints.GET_SHOW_REVIEWS_BY_ID(id));
     return result.results;
 }
 
 export async function getShowCreditsById(showId: string) {
-    const result = await request(endpoints.GET_SHOW_CREDITS(showId));
+    const result = await request.get(endpoints.GET_SHOW_CREDITS(showId));
     return result.cast;
 }
 
 export async function getShowRecommendationsById(movieId: string) {
-    const result = await request(
+    const result = await request.get(
         endpoints.GET_SHOW_RECOMENDATIONS_BY_ID(movieId)
     );
 
@@ -87,14 +87,14 @@ export async function getByCategory(
         popular: endpoints.TV_POPULAR(currentPage),
     };
 
-    const result = await request(categories[category]);
+    const result = await request.get(categories[category]);
 
     return result.results;
 }
 
 export async function search(searchedShow: string): Promise<ISearch[]> {
     const search: string = encodeURI(searchedShow);
-    const result = await request(endpoints.SEARCH(search));
+    const result = await request.get(endpoints.SEARCH(search));
 
     return result.results;
 }

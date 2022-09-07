@@ -1,4 +1,4 @@
-import request from './request';
+import * as request from './request';
 import { IActor, IPerson, IPersonCasts } from '../interfaces/person';
 
 const API_KEY: string = '356b2832036b27a06f949b42c2d89747';
@@ -12,15 +12,17 @@ const endpoints = {
 };
 
 export async function getPopularActors(): Promise<IActor[]> {
-    const result = await request(endpoints.POPULAR_ACTORS);
+    const result = await request.get(endpoints.POPULAR_ACTORS);
     return result.results;
 }
 
 export async function getPersonById(id: string): Promise<IPerson> {
-    return request(endpoints.GET_PERSON_BY_ID(id));
+    return request.get(endpoints.GET_PERSON_BY_ID(id));
 }
 
 export async function getPersonCastsById(id: string): Promise<IPersonCasts[]> {
-    const result = await request(endpoints.GET_PERSON_MOVIE_CREDITS_BY_ID(id));
+    const result = await request.get(
+        endpoints.GET_PERSON_MOVIE_CREDITS_BY_ID(id)
+    );
     return result.cast;
 }
