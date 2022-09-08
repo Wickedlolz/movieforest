@@ -24,6 +24,7 @@ import IsAuth from './components/common/IsAuth';
 import Movies from './components/Movies/Movies';
 import TvShows from './components/TvShows/TvShows';
 import Search from './components/Search/Search';
+import ErrorBoundary from './components/common/ErrorBoundary';
 
 function App() {
     const theme = useRecoilValue(themeState);
@@ -48,56 +49,60 @@ function App() {
     };
 
     return (
-        <AuthContextProvider>
-            <ThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
-                <CssBaseline />
-                <Container maxWidth="lg">
-                    <Header />
-                    <Routes>
-                        <Route path="/" element={<Main />} />
-                        <Route path="/signin" element={<SignIn />} />
-                        <Route path="/signup" element={<SignUp />} />
-                        <Route path="/movies" element={<Movies />} />
-                        <Route path="/movie/:movieId" element={<Movie />} />
-                        <Route path="/tv" element={<TvShows />} />
-                        <Route path="/tv/:tvId" element={<Show />} />
-                        <Route path="/people" element={<People />} />
-                        <Route path="/search" element={<Search />} />
-                        <Route
-                            path="/people/person/:personId"
-                            element={<Person />}
-                        />
-                        <Route element={<IsAuth />}>
-                            <Route path="/account" element={<Account />} />
-                        </Route>
-                        <Route path="/*" element={<NotFound />} />
-                    </Routes>
-                    <Snackbar
-                        open={notify.show}
-                        autoHideDuration={6000}
-                        onClose={handleClose}
-                    >
-                        {notify.type === 'success' ? (
-                            <Alert
-                                onClose={handleClose}
-                                severity="success"
-                                sx={{ width: '100%' }}
-                            >
-                                {notify.msg}
-                            </Alert>
-                        ) : (
-                            <Alert
-                                onClose={handleClose}
-                                severity="error"
-                                sx={{ width: '100%' }}
-                            >
-                                {notify.msg}
-                            </Alert>
-                        )}
-                    </Snackbar>
-                </Container>
-            </ThemeProvider>
-        </AuthContextProvider>
+        <ErrorBoundary>
+            <AuthContextProvider>
+                <ThemeProvider
+                    theme={theme === 'light' ? lightTheme : darkTheme}
+                >
+                    <CssBaseline />
+                    <Container maxWidth="lg">
+                        <Header />
+                        <Routes>
+                            <Route path="/" element={<Main />} />
+                            <Route path="/signin" element={<SignIn />} />
+                            <Route path="/signup" element={<SignUp />} />
+                            <Route path="/movies" element={<Movies />} />
+                            <Route path="/movie/:movieId" element={<Movie />} />
+                            <Route path="/tv" element={<TvShows />} />
+                            <Route path="/tv/:tvId" element={<Show />} />
+                            <Route path="/people" element={<People />} />
+                            <Route path="/search" element={<Search />} />
+                            <Route
+                                path="/people/person/:personId"
+                                element={<Person />}
+                            />
+                            <Route element={<IsAuth />}>
+                                <Route path="/account" element={<Account />} />
+                            </Route>
+                            <Route path="/*" element={<NotFound />} />
+                        </Routes>
+                        <Snackbar
+                            open={notify.show}
+                            autoHideDuration={6000}
+                            onClose={handleClose}
+                        >
+                            {notify.type === 'success' ? (
+                                <Alert
+                                    onClose={handleClose}
+                                    severity="success"
+                                    sx={{ width: '100%' }}
+                                >
+                                    {notify.msg}
+                                </Alert>
+                            ) : (
+                                <Alert
+                                    onClose={handleClose}
+                                    severity="error"
+                                    sx={{ width: '100%' }}
+                                >
+                                    {notify.msg}
+                                </Alert>
+                            )}
+                        </Snackbar>
+                    </Container>
+                </ThemeProvider>
+            </AuthContextProvider>
+        </ErrorBoundary>
     );
 }
 

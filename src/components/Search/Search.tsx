@@ -64,7 +64,7 @@ function Search() {
                     style={{ display: 'flex', flexDirection: 'column' }}
                 >
                     <TextField
-                        label={'What are you looking?'}
+                        label={'Search'}
                         name="search"
                         error={isEmptyField}
                     />
