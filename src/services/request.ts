@@ -1,8 +1,12 @@
 const baseUrl: string = `https://api.themoviedb.org/3`;
 
-async function request(url: string): Promise<any> {
+async function request(method: string, url: string): Promise<any> {
+    const options = {
+        method,
+    };
+
     try {
-        const response = await fetch(baseUrl + url);
+        const response = await fetch(baseUrl + url, options);
 
         if (response.ok === false) {
             throw new Error(response.statusText);
@@ -16,4 +20,4 @@ async function request(url: string): Promise<any> {
     }
 }
 
-export default request;
+export const get = request.bind(null, 'GET');

@@ -1,4 +1,4 @@
-import request from './request';
+import * as request from './request';
 import { IMovie, IMovieInfo, IMovieVideo, ISearch } from '../interfaces/movie';
 
 const API_KEY: string = '356b2832036b27a06f949b42c2d89747';
@@ -35,26 +35,26 @@ const endpoints = {
 };
 
 export async function getMovieReviewsById(movieId: string): Promise<any> {
-    return request(endpoints.GET_MOVIE_REVIEWS_BY_ID(movieId));
+    return request.get(endpoints.GET_MOVIE_REVIEWS_BY_ID(movieId));
 }
 
 export async function getUpcomingMovies(page?: number): Promise<IMovie[]> {
-    const result = await request(endpoints.UPCOMING(page));
+    const result = await request.get(endpoints.UPCOMING(page));
     return result.results;
 }
 
 export async function getTopRatedMovies(page?: number): Promise<IMovie[]> {
-    const result = await request(endpoints.TOP_RATED(page));
+    const result = await request.get(endpoints.TOP_RATED(page));
     return result.results;
 }
 
 export async function getPopularMovies(page?: number): Promise<IMovie[]> {
-    const result = await request(endpoints.POPULAR(page));
+    const result = await request.get(endpoints.POPULAR(page));
     return result.results;
 }
 
 export async function getNowPlayingMovies(page?: number): Promise<IMovie[]> {
-    const result = await request(endpoints.NOW_PLAYING(page));
+    const result = await request.get(endpoints.NOW_PLAYING(page));
     return result.results;
 }
 
@@ -63,10 +63,10 @@ export async function getMovieDetailedInfo(
 ): Promise<[IMovieInfo, IMovieVideo[]]> {
     try {
         return await Promise.all([
-            request(endpoints.GET_DETAILS_BY_ID(movieId)),
-            request(endpoints.GET_VIDEOS_BY_ID(movieId)).then(
-                (result: any) => result.results
-            ),
+            request.get(endpoints.GET_DETAILS_BY_ID(movieId)),
+            request
+                .get(endpoints.GET_VIDEOS_BY_ID(movieId))
+                .then((result: any) => result.results),
         ]);
     } catch (error: any) {
         throw error;
@@ -74,13 +74,15 @@ export async function getMovieDetailedInfo(
 }
 
 export async function getMovieCreditsById(movieId: string) {
-    const result = await request(endpoints.GET_MOVIE_CREDITS(movieId));
+    const result = await request.get(endpoints.GET_MOVIE_CREDITS(movieId));
 
     return result.cast;
 }
 
 export async function getMovieRecommendationsById(movieId: string) {
-    const result = await request(endpoints.GET_RECOMMENDATIONS_BY_ID(movieId));
+    const result = await request.get(
+        endpoints.GET_RECOMMENDATIONS_BY_ID(movieId)
+    );
     return result.results;
 }
 
@@ -95,14 +97,14 @@ export async function getByCategory(
         popular: endpoints.POPULAR(currentPage),
     };
 
-    const result = await request(categories[category]);
+    const result = await request.get(categories[category]);
 
     return result.results;
 }
 
 export async function search(searchedMovie: string): Promise<ISearch[]> {
     const search: string = encodeURI(searchedMovie);
-    const result = await request(endpoints.SEARCH(search));
+    const result = await request.get(endpoints.SEARCH(search));
 
     return result.results;
 }
