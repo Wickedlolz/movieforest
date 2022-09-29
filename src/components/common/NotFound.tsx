@@ -21,7 +21,7 @@ function NotFound() {
                 color="text.secondary"
                 component="p"
             >
-                The page you’re looking for doesn't exist.
+                The page you're looking for doesn't exist.
             </Typography>
             <Typography
                 variant="h5"

@@ -25,6 +25,7 @@ import Movies from './components/Movies/Movies';
 import TvShows from './components/TvShows/TvShows';
 import Search from './components/Search/Search';
 import ErrorBoundary from './components/common/ErrorBoundary';
+import Footer from './components/common/Footer';
 
 function App() {
     const theme = useRecoilValue(themeState);
@@ -99,6 +100,7 @@ function App() {
                                 </Alert>
                             )}
                         </Snackbar>
+                        <Footer />
                     </Container>
                 </ThemeProvider>
             </AuthContextProvider>
