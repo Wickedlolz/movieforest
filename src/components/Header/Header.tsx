@@ -24,16 +24,18 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import LoginIcon from '@mui/icons-material/Login';
 import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
+import useLocalStorage from '../../hooks/useLocalStorage';
 
 function Header() {
     const { user, logout } = useUserAuth();
-    const [theme, setTheme] = useRecoilState(themeState);
+    const [theme, setItem] = useLocalStorage('theme', 'dark');
+    // const [theme, setTheme] = useRecoilState(themeState);
     const navigate = useNavigate();
     const [userAnchorEl, setUserAnchorEl] = useState<null | HTMLElement>(null);
     const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
 
-    const changeTheme = () =>
-        setTheme((state) => (state === 'light' ? 'dark' : 'light'));
+    const changeTheme = () => setItem(theme === 'light' ? 'dark' : 'light');
+    // setItem((state) => (state === 'light' ? 'dark' : 'light'));
 
     const handleUserMenu = (event: MouseEvent<HTMLElement>) => {
         setUserAnchorEl(event.currentTarget);

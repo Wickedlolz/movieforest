@@ -26,9 +26,11 @@ import TvShows from './components/TvShows/TvShows';
 import Search from './components/Search/Search';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import Footer from './components/common/Footer';
+import useLocalStorage from './hooks/useLocalStorage';
 
 function App() {
-    const theme = useRecoilValue(themeState);
+    const [theme, setItem] = useLocalStorage('theme', 'dark');
+    // const theme = useRecoilValue(themeState);
     const [notify, setNotify] = useRecoilState(notificationAtom);
 
     const lightTheme = createTheme();
