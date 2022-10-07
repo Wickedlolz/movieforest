@@ -1,8 +1,6 @@
 import { useState, MouseEvent } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useUserAuth } from '../../contexts/AuthContext';
-import { useRecoilState } from 'recoil';
-import { themeState } from '../../atoms/themeAtom';
 
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -29,13 +27,11 @@ import useLocalStorage from '../../hooks/useLocalStorage';
 function Header() {
     const { user, logout } = useUserAuth();
     const [theme, setItem] = useLocalStorage('theme', 'dark');
-    // const [theme, setTheme] = useRecoilState(themeState);
     const navigate = useNavigate();
     const [userAnchorEl, setUserAnchorEl] = useState<null | HTMLElement>(null);
     const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
 
     const changeTheme = () => setItem(theme === 'light' ? 'dark' : 'light');
-    // setItem((state) => (state === 'light' ? 'dark' : 'light'));
 
     const handleUserMenu = (event: MouseEvent<HTMLElement>) => {
         setUserAnchorEl(event.currentTarget);
