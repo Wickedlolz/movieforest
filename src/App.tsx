@@ -1,8 +1,7 @@
 import { SyntheticEvent } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { AuthContextProvider } from './contexts/AuthContext';
-import { useRecoilValue, useRecoilState } from 'recoil';
-import { themeState } from './atoms/themeAtom';
+import { useRecoilState } from 'recoil';
 import { notificationAtom } from './atoms/notificationAtom';
 
 import { createTheme, ThemeProvider } from '@mui/material/styles';
