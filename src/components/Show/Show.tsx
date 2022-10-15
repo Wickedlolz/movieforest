@@ -182,7 +182,6 @@ function Show() {
                 <CardMedia
                     component="img"
                     loading="lazy"
-                    height="340"
                     image={`https://image.tmdb.org/t/p/original/${show.info?.backdrop_path}`}
                     alt="movie poster"
                 />
