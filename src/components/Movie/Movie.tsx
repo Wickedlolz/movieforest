@@ -179,7 +179,6 @@ function Movie() {
             <Card>
                 <CardMedia
                     component="img"
-                    height="340"
                     image={`https://image.tmdb.org/t/p/original/${movie.info?.backdrop_path}`}
                     alt="movie poster"
                 />
