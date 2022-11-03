@@ -28,8 +28,7 @@ import Footer from './components/common/Footer';
 import useLocalStorage from './hooks/useLocalStorage';
 
 function App() {
-    const [theme, setItem] = useLocalStorage('theme', 'dark');
-    // const theme = useRecoilValue(themeState);
+    const [theme] = useLocalStorage('theme', 'dark');
     const [notify, setNotify] = useRecoilState(notificationAtom);
 
     const lightTheme = createTheme();
