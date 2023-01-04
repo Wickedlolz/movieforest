@@ -3,6 +3,7 @@
 ## Technologies and libs used
 
 -   React
+-   TypeScript
 -   react-hook-form
 -   react-multi-carousel
 -   react-player
